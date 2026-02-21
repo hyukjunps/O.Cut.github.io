@@ -15,10 +15,10 @@
       --pink2:#ff9ac4;
       --shadow: 0 18px 55px rgba(31,15,24,.12);
 
-      /* 프레임 이미지 경로 (필요하면 assets/template.png 등으로 변경) */
+      /* 프레임 경로 (필요하면 assets/template.png 로 변경) */
       --frame-url: "template.png";
 
-      /* 프레임(템플릿) 사진 4칸 위치(%) */
+      /* 사진 4칸 위치(%) */
       --tl-left: 3.54%;
       --tl-top: 17.92%;
       --tr-left: 50.74%;
@@ -42,30 +42,18 @@
       overflow:hidden;
     }
 
-    /* 0) 키 입력 전: 완전 검은 화면 */
+    /* 키 입력 전: 완전 검은 화면 */
     .blackGate{position:fixed; inset:0; background:#000; z-index:99999;}
 
-    /* 전체 화면 꽉 차는 레이아웃 */
-    .app{
-      height:100%;
-      width:100%;
-      display:flex;
-      flex-direction:column;
-    }
+    .app{height:100%; width:100%; display:flex; flex-direction:column;}
     .topbar{
       height:72px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:flex; align-items:center; justify-content:space-between;
       padding:0 22px;
       background: linear-gradient(90deg, rgba(255,106,168,.14), rgba(255,255,255,.85));
       border-bottom:1px solid rgba(243,205,224,.9);
     }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      font-weight:950; letter-spacing:-.6px;
-      font-size:18px;
-    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:950; letter-spacing:-.6px; font-size:18px;}
     .heart{
       width:16px; height:16px;
       background: radial-gradient(circle at 30% 30%, #fff 0%, #ffd2e6 40%, #ff6aa8 100%);
@@ -74,9 +62,7 @@
       box-shadow: 0 0 0 10px rgba(255,106,168,.10);
     }
     .status{color:var(--muted); font-size:14px; font-weight:850;}
-
     .main{flex:1; min-height:0;}
-
     .screen{display:none; height:100%; padding:20px;}
     .screen.active{display:block;}
 
@@ -89,15 +75,12 @@
       overflow:hidden;
     }
 
-    /* START: 전체 클릭 영역 */
+    /* START */
     .startCard{
       height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex; align-items:center; justify-content:center;
       text-align:center;
-      cursor:pointer;
-      user-select:none;
+      cursor:pointer; user-select:none;
       background:
         radial-gradient(900px 700px at 70% 30%, rgba(255,154,196,.22) 0%, rgba(255,255,255,0) 55%),
         radial-gradient(900px 700px at 20% 70%, rgba(255,106,168,.14) 0%, rgba(255,255,255,0) 55%);
@@ -121,7 +104,6 @@
       color: rgba(111,85,97,.90);
       font-weight:900;
       font-size:min(2.6vw, 18px);
-      letter-spacing:-.2px;
     }
     .subSmall span{
       display:inline-block;
@@ -131,12 +113,10 @@
       border:1px solid rgba(243,205,224,.95);
     }
 
-    /* INFO(짧은 안내 화면) */
+    /* INFO */
     .infoCard{
       height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex; align-items:center; justify-content:center;
       text-align:center;
       padding:24px;
       background:
@@ -145,32 +125,15 @@
     }
     .infoBox{
       width:min(820px, 92vw);
-      background: rgba(255,255,255,.86);
+      background: rgba(255,255,255,.90);
       border:1px solid rgba(243,205,224,.95);
       border-radius:26px;
       padding:26px 22px;
       box-shadow: 0 18px 55px rgba(31,15,24,.08);
     }
-    .infoBox h2{
-      margin:0 0 10px;
-      font-size:min(4.2vw, 34px);
-      letter-spacing:-1px;
-      font-weight:1000;
-    }
-    .infoBox p{
-      margin:0;
-      color: rgba(111,85,97,.92);
-      font-weight:850;
-      font-size:min(2.8vw, 18px);
-      line-height:1.65;
-    }
-    .infoTimer{
-      margin-top:16px;
-      font-weight:1000;
-      font-size:min(6vw, 46px);
-      color: rgba(43,27,34,.92);
-      letter-spacing:-1px;
-    }
+    .infoBox h2{margin:0 0 10px; font-size:min(4.2vw, 34px); letter-spacing:-1px; font-weight:1000;}
+    .infoBox p{margin:0; color: rgba(111,85,97,.92); font-weight:850; font-size:min(2.8vw, 18px); line-height:1.65;}
+    .infoTimer{margin-top:16px; font-weight:1000; font-size:min(6vw, 46px); letter-spacing:-1px;}
 
     /* SHOOT */
     .shootGrid{
@@ -182,37 +145,27 @@
     @media (max-width: 980px){
       .shootGrid{grid-template-columns:1fr;}
     }
-
     .videoWrap{
       border-radius:26px;
       overflow:hidden;
       border:1px solid rgba(243,205,224,.95);
       background:#000;
       position:relative;
-      min-height:0;
       height:100%;
     }
     video{
-      width:100%;
-      height:100%;
+      width:100%; height:100%;
       display:block;
       object-fit:cover;
       transform: scaleX(-1);
     }
-    .hud{
-      position:absolute; inset:0;
-      pointer-events:none;
-    }
-    .hudTop{
-      position:absolute; left:16px; top:16px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
+    .hud{position:absolute; inset:0; pointer-events:none;}
+    .hudTop{position:absolute; left:16px; top:16px; display:flex; gap:10px; flex-wrap:wrap;}
     .pill{
       padding:10px 14px;
       border-radius:999px;
       background: rgba(255,255,255,.76);
       border:1px solid rgba(243,205,224,.95);
-      color: rgba(43,27,34,.92);
       font-size:14px;
       font-weight:1000;
     }
@@ -242,44 +195,27 @@
       padding:16px;
       overflow:hidden;
     }
-    .thumbTitle{
-      font-weight:1000;
-      letter-spacing:-.3px;
-      margin-bottom:12px;
-      font-size:18px;
-    }
-    .thumbGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
+    .thumbTitle{font-weight:1000; letter-spacing:-.3px; margin-bottom:12px; font-size:18px;}
+    .thumbGrid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
     .thumb{
       border-radius:18px;
       overflow:hidden;
       border:1px solid rgba(243,205,224,.95);
       background: linear-gradient(180deg, #fff, #ffeaf3);
       aspect-ratio: 4/3;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display:flex; align-items:center; justify-content:center;
       color: rgba(111,85,97,.85);
       font-weight:1000;
       font-size:14px;
-      text-align:center;
     }
     .thumb img{width:100%; height:100%; object-fit:cover; display:block;}
 
-    .btnRow{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-    }
+    .btnRow{display:flex; gap:12px; flex-wrap:wrap;}
     .btn{
       flex:1;
       min-width:160px;
       border:1px solid rgba(255,106,168,.40);
       background: rgba(255,255,255,.92);
-      color:var(--text);
       padding:18px 18px;
       border-radius:20px;
       cursor:pointer;
@@ -315,26 +251,50 @@
       border-radius:26px;
       overflow:hidden;
       border:1px solid rgba(243,205,224,.95);
-      background: #fff;
+      background: rgba(255,255,255,.88);
       box-shadow: 0 18px 55px rgba(31,15,24,.08);
       position:relative;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:10px;
+      padding:14px;
     }
-    .frame{
+
+    /* ✅ 마지막 화면: 프레임을 항상 "이미지 레이어"로 표시 */
+    .frameWrap{
       width:100%;
       height:100%;
-      max-width: calc((100vh - 72px - 40px) * (1356/2048));
-      max-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .frameBox{
+      width:min(92%, calc((100vh - 72px - 40px) * (1356/2048)));
+      height:auto;
       aspect-ratio: 1356/2048;
+      position:relative;
       border-radius:22px;
       overflow:hidden;
-      position:relative;
-      background: url(var(--frame-url)) center/cover no-repeat, #fff;
+      background:#fff;
       border:1px solid rgba(243,205,224,.95);
+      box-shadow: 0 18px 55px rgba(31,15,24,.08);
     }
+    .frameImg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      pointer-events:none;
+      user-select:none;
+      z-index:3; /* 사진 위 */
+    }
+    .photosLayer{
+      position:absolute;
+      inset:0;
+      z-index:2; /* 프레임 아래 */
+    }
+
     .slot{
       position:absolute;
       border-radius: var(--slot-r);
@@ -359,7 +319,7 @@
     }
     .infoPanel h2{margin:0; font-weight:1000; letter-spacing:-.5px; font-size:24px;}
     .infoPanel p{margin:0; color: rgba(111,85,97,.92); font-weight:850; line-height:1.65;}
-    .hint{margin-top:auto; color: rgba(111,85,97,.78); font-weight:800; font-size:13px; line-height:1.6;}
+
     canvas{display:none;}
   </style>
 </head>
@@ -385,15 +345,12 @@
         </div>
       </section>
 
-      <!-- INFO (짧은 안내) -->
+      <!-- INFO -->
       <section class="screen" id="screenInfo">
         <div class="panel infoCard">
           <div class="infoBox">
             <h2>촬영 안내</h2>
-            <p>
-              <b>10초마다</b> 사진을 한 장씩 찍습니다.<br/>
-              총 <b>4장</b>이 자동으로 촬영됩니다.
-            </p>
+            <p><b>10초마다</b> 사진을 한 장씩 찍습니다.<br/>총 <b>4장</b>이 자동으로 촬영됩니다.</p>
             <div class="infoTimer" id="infoTimer">3</div>
           </div>
         </div>
@@ -416,7 +373,7 @@
           <div class="side">
             <div class="thumbPanel">
               <div class="thumbTitle">미리보기</div>
-              <div class="thumbGrid" id="thumbGrid">
+              <div class="thumbGrid">
                 <div class="thumb" data-i="0">1번</div>
                 <div class="thumb" data-i="1">2번</div>
                 <div class="thumb" data-i="2">3번</div>
@@ -436,11 +393,18 @@
       <section class="screen" id="screenResult">
         <div class="resultGrid">
           <div class="stage">
-            <div class="frame" id="frame">
-              <div class="slot" id="slot1"><img alt=""></div>
-              <div class="slot" id="slot2"><img alt=""></div>
-              <div class="slot" id="slot3"><img alt=""></div>
-              <div class="slot" id="slot4"><img alt=""></div>
+            <div class="frameWrap">
+              <div class="frameBox" id="frameBox">
+                <!-- 사진 레이어 -->
+                <div class="photosLayer" id="photosLayer">
+                  <div class="slot" id="slot1"><img alt=""></div>
+                  <div class="slot" id="slot2"><img alt=""></div>
+                  <div class="slot" id="slot3"><img alt=""></div>
+                  <div class="slot" id="slot4"><img alt=""></div>
+                </div>
+                <!-- ✅ 프레임 레이어(항상 보임) -->
+                <img class="frameImg" id="frameImg" alt="" />
+              </div>
             </div>
           </div>
 
@@ -453,11 +417,6 @@
               <button class="btn primary" id="btnSave">PNG로 저장</button>
               <button class="btn danger" id="btnHome">처음으로</button>
             </div>
-
-            <div class="hint">
-              프레임 이미지 경로가 다르면 맨 위 CSS의 <b>--frame-url</b>을 수정하면 됨.<br/>
-              웹캠은 보통 HTTPS/localhost에서만 동작함.
-            </div>
           </div>
         </div>
       </section>
@@ -467,7 +426,7 @@
   </div>
 
   <script>
-    // ===== 화면 전환 =====
+    // 화면 전환
     const statusEl = document.getElementById('status');
     const screens = {
       start: document.getElementById('screenStart'),
@@ -478,17 +437,14 @@
     function show(name){
       Object.values(screens).forEach(s => s.classList.remove('active'));
       screens[name].classList.add('active');
-      statusEl.textContent =
-        name === 'start' ? '대기' :
-        name === 'info'  ? '안내' :
-        name === 'shoot' ? '촬영 중' : '최종본';
+      statusEl.textContent = name === 'start' ? '대기' : (name === 'info' ? '안내' : (name === 'shoot' ? '촬영 중' : '최종본'));
     }
 
-    // ===== 검은 화면: 키 입력 시 해제(텍스트 없음) =====
+    // 검은 화면: 키 입력 시 해제
     const blackGate = document.getElementById('blackGate');
     window.addEventListener('keydown', () => { blackGate.style.display = 'none'; }, { once:true });
 
-    // ===== DOM =====
+    // DOM
     const tapToStart = document.getElementById('tapToStart');
     const infoTimerEl = document.getElementById('infoTimer');
 
@@ -510,17 +466,26 @@
       document.querySelector('#slot3 img'),
       document.querySelector('#slot4 img'),
     ];
+
+    // ✅ 프레임을 마지막 화면에 항상 표시
+    const frameImg = document.getElementById('frameImg');
     const exportCanvas = document.getElementById('exportCanvas');
 
-    // ===== 상태 =====
+    // 상태
     let stream = null;
     let shots = [null,null,null,null];
     let aborter = null;
     let running = false;
 
-    // ✅ 요청: 10초마다 4장
     const INTERVAL_SEC = 10;
     const TOTAL_SHOTS = 4;
+
+    // 프레임 로드(마지막 화면용)
+    const framePath = getComputedStyle(document.documentElement)
+      .getPropertyValue('--frame-url')
+      .trim()
+      .replace(/^"|"$/g,'');
+    frameImg.src = framePath;
 
     function setCountdownVisible(v){ countdownEl.classList.toggle('show', v); }
     function setCountdownText(t){ countdownEl.textContent = String(t); }
@@ -533,6 +498,7 @@
       im.src = shots[i];
       el.appendChild(im);
     }
+
     function resetShots(){
       shots = Array(TOTAL_SHOTS).fill(null);
       for(let i=0;i<TOTAL_SHOTS;i++){
@@ -541,6 +507,7 @@
       }
       btnRetake.disabled = true;
     }
+
     function updateResultSlots(){
       for(let i=0;i<TOTAL_SHOTS;i++){
         if(shots[i]) slotImgs[i].src = shots[i];
@@ -555,6 +522,7 @@
       video.srcObject = stream;
       await video.play();
     }
+
     function closeCamera(){
       if(stream){
         stream.getTracks().forEach(t=>t.stop());
@@ -565,7 +533,6 @@
 
     const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
 
-    // 프레임용 캡처(4:3 중앙 크롭 + 미러링)
     function captureFrame(){
       const vw = video.videoWidth || 1280;
       const vh = video.videoHeight || 720;
@@ -612,7 +579,6 @@
 
           pillStep.textContent = `촬영 ${i+1} / ${TOTAL_SHOTS}`;
 
-          // 10초 카운트다운(1초 단위)
           for(let t=INTERVAL_SEC; t>=1; t--){
             if(signal.aborted) throw new Error('aborted');
             pillMsg.textContent = `${t}초 뒤 촬영`;
@@ -626,7 +592,6 @@
           shots[i] = captureFrame();
           setThumb(i);
 
-          // 다음 촬영까지 짧은 여유 (원하면 0으로)
           await sleep(300);
         }
 
@@ -646,7 +611,7 @@
       running = false;
     }
 
-    // ===== 안내 화면(짧게 3초) =====
+    // 안내 화면 3초
     async function showInfoThenShoot(){
       show('info');
       for(let t=3; t>=1; t--){
@@ -660,14 +625,14 @@
       try{
         await openCamera();
       }catch(e){
-        alert('웹캠 권한이 필요하거나 HTTPS/localhost가 아닐 수 있어요.\n\n' + e.message);
+        alert('웹캠 권한이 필요하거나 HTTPS/localhost가 아닐 수 있어요.');
         show('start');
         return;
       }
       run10sIntervalShoot();
     }
 
-    // ===== PNG 합성/저장 =====
+    // PNG 저장(프레임 + 4장 합성)
     const pctToNum = (v) => parseFloat(v) / 100.0;
 
     function getSlotRectsInPx(w, h){
@@ -714,16 +679,15 @@
 
     async function exportPNG(){
       if(!shots.every(Boolean)){
-        alert('4장 모두 촬영되어야 저장할 수 있어요.');
+        alert('촬영이 완료되지 않았어요.');
         return;
       }
 
-      const framePath = getComputedStyle(document.documentElement).getPropertyValue('--frame-url').trim().replace(/^"|"$/g,'');
       let tpl;
       try{
         tpl = await loadImage(framePath);
       }catch(e){
-        alert('프레임 이미지를 못 찾았어요. frame 경로(--frame-url)를 확인해줘.');
+        alert('프레임 이미지를 못 찾았어요.');
         return;
       }
 
@@ -731,8 +695,7 @@
       exportCanvas.height = tpl.height;
       const ctx = exportCanvas.getContext('2d');
 
-      ctx.drawImage(tpl, 0, 0);
-
+      // 1) 사진 먼저
       const imgs = await Promise.all(shots.map(s => loadImage(s)));
       const rects = getSlotRectsInPx(tpl.width, tpl.height);
       for(let i=0;i<TOTAL_SHOTS;i++){
@@ -740,20 +703,23 @@
         drawCover(ctx, imgs[i], r.x, r.y, r.w, r.h);
       }
 
+      // 2) 프레임을 위에 덮기 (✅ 저장 결과도 프레임이 위로)
+      ctx.drawImage(tpl, 0, 0);
+
       const blob = await new Promise(res => exportCanvas.toBlob(res, 'image/png'));
-      if(!blob){ alert('저장 실패(브라우저 제한)'); return; }
+      if(!blob){ alert('저장 실패'); return; }
 
       const a = document.createElement('a');
       const url = URL.createObjectURL(blob);
       a.href = url;
-      a.download = `wedding_4cut_${Date.now()}.png`;
+      a.download = `4cut_${Date.now()}.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
     }
 
-    // ===== 시작(클릭) =====
+    // 시작
     async function startFlow(){
       resetShots();
       await showInfoThenShoot();
@@ -764,7 +730,7 @@
       if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startFlow(); }
     });
 
-    // ===== 버튼 =====
+    // 버튼
     btnCancel.addEventListener('click', () => {
       cancelShoot();
       closeCamera();
@@ -785,7 +751,6 @@
         if(!stream) await openCamera();
         run10sIntervalShoot();
       }catch(e){
-        alert('웹캠을 다시 열 수 없어요.\n\n' + e.message);
         closeCamera();
         show('start');
       }
