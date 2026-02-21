@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>인생네컷 키오스크</title>
+  <style>
+    :root{
+      --bg:#070a12;
+      --card:#0b1224;
+      --stroke:rgba(255,255,255,.14);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --acc:#7c3aed;
+
+      /* PPT 슬라이드를 PNG로 저장해서 같은 폴더에 template.png로 두기 */
+      --tpl: url("template.png");
+
+      /* PPT 남색 박스 4칸 위치(%) - 너가 올린 틀 기준으로 잡아둠 */
+      --tl-left: 3.54%;
+      --tl-top: 17.92%;
+      --tr-left: 50.74%;
+      --tr-top: 17.92%;
+      --bl-left: 3.54%;
+      --bl-top: 49.37%;
+      --br-left: 50.74%;
+      --br-top: 49.37%;
+      --slot-w: 46.39%;
+      --slot-h: 23.90%;
+      --slot-r: 10px;
+    }
+
+    *{box-sizing:border-box;}
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+      background: radial-gradient(1200px 900px at 20% 10%, #1d2a6b 0%, var(--bg) 55%, #03040a 100%);
+      color:var(--text);
+      overflow:hidden;
+    }
+
+    .app{height:100%; display:flex; align-items:center; justify-content:center; padding:18px;}
+    .shell{
+      width:min(1100px, 96vw);
+      height:min(720px, 92vh);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--stroke);
+      border-radius:28px;
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .topbar{
+      height:64px;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 18px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:850; letter-spacing:-.4px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--acc);
+      box-shadow: 0 0 0 6px rgba(124,58,237,.18);
+    }
+    .status{color:var(--muted); font-size:13px;}
+
+    .screen{position:absolute; inset:64px 0 0 0; display:none;}
+    .screen.active{display:block;}
+
+    /* 키오스크 버튼 */
+    .btn{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color:var(--text);
+      padding:16px 20px;
+      border-radius:18px;
+      cursor:pointer;
+      font-weight:750;
+      font-size:16px;
+      letter-spacing:-.2px;
+      user-select:none;
+    }
+    .btn:active{transform: translateY(1px);}
+    .btn.primary{
+      background: rgba(124,58,237,.28);
+      border-color: rgba(124,58,237,.55);
+    }
+    .btn.danger{
+      background: rgba(220,38,38,.22);
+      border-color: rgba(220,38,38,.50);
+    }
+
+    /* START */
+    .start{
+      height:100%;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      padding:18px;
+    }
+    @media (max-width: 940px){
+      .start{grid-template-columns:1fr;}
+    }
+    .panel{
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:18px;
+      overflow:hidden;
+    }
+    .hero{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      height:100%;
+      gap:14px;
+      padding:10px 6px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:44px;
+      line-height:1.1;
+      letter-spacing:-1px;
+    }
+    .hero p{margin:0; color:var(--muted); font-size:15px; line-height:1.6;}
+    .bigActions{display:flex; gap:12px; flex-wrap:wrap; margin-top:8px;}
+    .note{
+      margin-top:10px;
+      color: rgba(255,255,255,.62);
+      font-size:12.5px;
+      line-height:1.6;
+    }
+
+    /* PHOTO */
+    .photo{
+      height:100%;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:18px;
+      padding:18px;
+    }
+    @media (max-width: 940px){
+      .photo{grid-template-columns:1fr;}
+    }
+
+    .videoWrap{
+      border-radius:24px;
+      overflow:hidden;
+      position:relative;
+      background:#000;
+      border:1px solid rgba(255,255,255,.10);
+      min-height:360px;
+    }
+    video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transform: scaleX(-1); /* 키오스크 셀카 느낌 */
+    }
+    .overlayHUD{
+      position:absolute; inset:0;
+      pointer-events:none;
+    }
+    .hudTop{
+      position:absolute; left:14px; top:14px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .pill{
+      padding:8px 12px;
+      border-radius:999px;
+      background: rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      font-size:13px;
+      font-weight:750;
+    }
+    .count{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:110px;
+      font-weight:950;
+      color:#fff;
+      text-shadow: 0 10px 60px rgba(0,0,0,.75);
+      opacity:0;
+      transition: opacity .12s ease;
+    }
+    .count.show{opacity:1;}
+
+    .side{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .thumbGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    .thumb{
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      aspect-ratio: 4/3;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: rgba(255,255,255,.66);
+      font-size:12px;
+      text-align:center;
+      padding:8px;
+    }
+    .thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+    .controls{display:flex; gap:10px; flex-wrap:wrap; margin-top:auto;}
+
+    /* RESULT */
+    .result{
+      height:100%;
+      display:grid;
+      grid-template-columns: 1fr .75fr;
+      gap:18px;
+      padding:18px;
+    }
+    @media (max-width: 940px){
+      .result{grid-template-columns:1fr;}
+    }
+    .stage{
+      width:100%;
+      aspect-ratio: 1356 / 2048;
+      border-radius:24px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow: 0 18px 60px rgba(0,0,0,.35);
+      position:relative;
+      background: var(--tpl) center/cover no-repeat, #f6efe6;
+    }
+    .slot{
+      position:absolute;
+      border-radius: var(--slot-r);
+      overflow:hidden;
+      background:#0b2a5b;
+    }
+    .slot img{width:100%; height:100%; object-fit:cover; display:block;}
+    #slot1{ left:var(--tl-left); top:var(--tl-top); width:var(--slot-w); height:var(--slot-h); }
+    #slot2{ left:var(--tr-left); top:var(--tr-top); width:var(--slot-w); height:var(--slot-h); }
+    #slot3{ left:var(--bl-left); top:var(--bl-top); width:var(--slot-w); height:var(--slot-h); }
+    #slot4{ left:var(--br-left); top:var(--br-top); width:var(--slot-w); height:var(--slot-h); }
+
+    .rightInfo{display:flex; flex-direction:column; gap:12px;}
+    .rightInfo h2{margin:0; font-size:22px; letter-spacing:-.4px;}
+    .rightInfo p{margin:0; color:var(--muted); line-height:1.6; font-size:14px;}
+    .rightBtns{display:flex; gap:10px; flex-wrap:wrap; margin-top:auto;}
+
+    /* 숨김 캔버스 */
+    canvas{display:none;}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="shell">
+      <div class="topbar">
+        <div class="brand"><span class="dot"></span>인생네컷 키오스크</div>
+        <div class="status" id="status">대기 화면</div>
+      </div>
+
+      <!-- START -->
+      <div class="screen start active" id="screenStart">
+        <div class="panel">
+          <div class="hero">
+            <h1>인생네컷<br/>촬영 시작</h1>
+            <p>
+              웹캠으로 4장을 <b>자동 타이머</b>로 촬영한 뒤,<br/>
+              PPT 프레임(template.png)에 합성해서 최종 PNG로 저장.
+            </p>
+            <div class="bigActions">
+              <button class="btn primary" id="btnStart">시작하기</button>
+              <button class="btn" id="btnHow">준비물 안내</button>
+            </div>
+            <div class="note" id="howBox" style="display:none;">
+              1) PPT 슬라이드를 PNG로 저장 → 파일명을 <b>template.png</b>로 맞추고 HTML과 같은 폴더에 둠<br/>
+              2) 웹캠은 보통 <b>HTTPS</b> 또는 <b>localhost</b>에서만 동작함(GitHub Pages OK)
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="display:flex; align-items:center; justify-content:center;">
+          <div style="width:min(360px, 92%); aspect-ratio: 1356/2048; border-radius:24px; overflow:hidden; border:1px solid rgba(255,255,255,.10); background: var(--tpl) center/cover no-repeat, rgba(255,255,255,.06); box-shadow: 0 16px 50px rgba(0,0,0,.35);"></div>
+        </div>
+      </div>
+
+      <!-- PHOTO -->
+      <div class="screen photo" id="screenPhoto">
+        <div class="videoWrap">
+          <video id="video" playsinline autoplay muted></video>
+          <div class="overlayHUD">
+            <div class="hudTop">
+              <div class="pill" id="pillStep">촬영: 1 / 4</div>
+              <div class="pill" id="pillHint">자동 촬영 진행 중</div>
+            </div>
+            <div class="count" id="countdown">3</div>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="panel" style="padding:14px;">
+            <div style="font-weight:850; letter-spacing:-.2px; margin-bottom:8px;">촬영 미리보기</div>
+            <div class="thumbGrid" id="thumbGrid">
+              <div class="thumb" data-i="0">1번</div>
+              <div class="thumb" data-i="1">2번</div>
+              <div class="thumb" data-i="2">3번</div>
+              <div class="thumb" data-i="3">4번</div>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="btn danger" id="btnCancel">취소</button>
+            <button class="btn" id="btnRetake" disabled>전체 다시찍기</button>
+            <button class="btn primary" id="btnSkip" disabled>결과 보기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULT -->
+      <div class="screen result" id="screenResult">
+        <div class="stage" id="previewStage" aria-label="최종 미리보기">
+          <div class="slot" id="slot1"><img alt=""/></div>
+          <div class="slot" id="slot2"><img alt=""/></div>
+          <div class="slot" id="slot3"><img alt=""/></div>
+          <div class="slot" id="slot4"><img alt=""/></div>
+        </div>
+
+        <div class="rightInfo">
+          <div class="panel" style="padding:16px;">
+            <h2>최종본 확인</h2>
+            <p>
+              아래 “PNG로 저장”을 누르면 프레임(template.png) + 4장 사진을 합성한 <b>최종 PNG</b>가 저장됨.
+            </p>
+            <p style="margin-top:8px; font-size:12.5px; color:rgba(255,255,255,.62);">
+              합성은 캔버스로 처리되며, 다운로드는 브라우저가 지원하는 방식으로 진행됨.
+            </p>
+          </div>
+
+          <div class="rightBtns">
+            <button class="btn" id="btnBack">다시 찍기</button>
+            <button class="btn primary" id="btnSave">PNG로 저장</button>
+            <button class="btn danger" id="btnHome">처음으로</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- hidden canvas for export -->
+      <canvas id="exportCanvas"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // ===== 화면 전환 =====
+    const statusEl = document.getElementById('status');
+    const screens = {
+      start: document.getElementById('screenStart'),
+      photo: document.getElementById('screenPhoto'),
+      result: document.getElementById('screenResult'),
+    };
+    function show(name){
+      Object.values(screens).forEach(s => s.classList.remove('active'));
+      screens[name].classList.add('active');
+      statusEl.textContent =
+        name === 'start' ? '대기 화면' :
+        name === 'photo' ? '촬영 중' : '최종본';
+    }
+
+    // ===== 준비 안내 토글 =====
+    document.getElementById('btnHow').addEventListener('click', () => {
+      const box = document.getElementById('howBox');
+      box.style.display = (box.style.display === 'none') ? 'block' : 'none';
+    });
+
+    // ===== 웹캠 =====
+    const video = document.getElementById('video');
+    const countdown = document.getElementById('countdown');
+    const pillStep = document.getElementById('pillStep');
+    const pillHint = document.getElementById('pillHint');
+
+    const thumbs = [...document.querySelectorAll('.thumb')];
+    const slotImgs = [
+      document.querySelector('#slot1 img'),
+      document.querySelector('#slot2 img'),
+      document.querySelector('#slot3 img'),
+      document.querySelector('#slot4 img'),
+    ];
+
+    const btnStart  = document.getElementById('btnStart');
+    const btnCancel = document.getElementById('btnCancel');
+    const btnRetake = document.getElementById('btnRetake');
+    const btnSkip   = document.getElementById('btnSkip');
+
+    const btnBack = document.getElementById('btnBack');
+    const btnSave = document.getElementById('btnSave');
+    const btnHome = document.getElementById('btnHome');
+
+    const exportCanvas = document.getElementById('exportCanvas');
+
+    let stream = null;
+    let running = false;
+    let shots = [null, null, null, null]; // dataURL
+    let abortController = null;
+
+    // 촬영 파라미터 (원하면 여기만 바꾸면 됨)
+    const COUNTDOWN_SEC = 3;     // 각 장 촬영 전 카운트다운
+    const BETWEEN_MS = 900;      // 촬영 후 다음 장 넘어가기 전 대기
+
+    function setCountdownVisible(v){
+      countdown.classList.toggle('show', v);
+    }
+    function setCountdownText(t){
+      countdown.textContent = String(t);
+    }
+
+    function setThumb(i){
+      const el = thumbs[i];
+      el.innerHTML = '';
+      if(!shots[i]){
+        el.textContent = `${i+1}번`;
+        return;
+      }
+      const im = new Image();
+      im.src = shots[i];
+      el.appendChild(im);
+    }
+    function updatePreviewSlots(){
+      for(let i=0;i<4;i++){
+        if(shots[i]) slotImgs[i].src = shots[i];
+      }
+    }
+    function resetShots(){
+      shots = [null,null,null,null];
+      thumbs.forEach((_,i)=>setThumb(i));
+      slotImgs.forEach(im=>im.removeAttribute('src'));
+      btnRetake.disabled = true;
+      btnSkip.disabled = true;
+    }
+
+    async function openCamera(){
+      // HTTPS/localhost 필요
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" },
+        audio: false
+      });
+      video.srcObject = stream;
+      await video.play();
+    }
+    function closeCamera(){
+      if(stream){
+        stream.getTracks().forEach(t=>t.stop());
+        stream = null;
+      }
+      video.srcObject = null;
+    }
+
+    // 비디오 프레임 캡처 -> 4:3 중앙 크롭 -> JPEG dataURL
+    function captureFrame(){
+      const vw = video.videoWidth || 1280;
+      const vh = video.videoHeight || 720;
+
+      // 원본을 4:3으로 중앙 크롭
+      const targetW = 1400;
+      const targetH = 1050; // 4:3
+
+      const srcAspect = vw / vh;
+      const dstAspect = targetW / targetH;
+
+      let sx=0, sy=0, sw=vw, sh=vh;
+      if(srcAspect > dstAspect){
+        sw = Math.round(vh * dstAspect);
+        sx = Math.round((vw - sw)/2);
+      }else{
+        sh = Math.round(vw / dstAspect);
+        sy = Math.round((vh - sh)/2);
+      }
+
+      const c = document.createElement('canvas');
+      c.width = targetW;
+      c.height = targetH;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(video, sx, sy, sw, sh, 0, 0, targetW, targetH);
+
+      return c.toDataURL('image/jpeg', 0.92);
+    }
+
+    async function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+    async function runAutoShoot(){
+      if(running) return;
+      running = true;
+      btnRetake.disabled = true;
+      btnSkip.disabled = true;
+
+      abortController = new AbortController();
+      const signal = abortController.signal;
+
+      try{
+        for(let i=0;i<4;i++){
+          if(signal.aborted) throw new Error('aborted');
+
+          pillStep.textContent = `촬영: ${i+1} / 4`;
+          pillHint.textContent = `타이머 ${COUNTDOWN_SEC}초 후 자동 촬영`;
+
+          // countdown
+          for(let t=COUNTDOWN_SEC; t>=1; t--){
+            if(signal.aborted) throw new Error('aborted');
+            setCountdownText(t);
+            setCountdownVisible(true);
+            await sleep(700);
+          }
+          setCountdownVisible(false);
+
+          // shoot
+          pillHint.textContent = '촬영!';
+          shots[i] = captureFrame();
+          setThumb(i);
+
+          await sleep(BETWEEN_MS);
+        }
+
+        pillHint.textContent = '촬영 완료';
+        btnRetake.disabled = false;
+        btnSkip.disabled = false;
+
+        // 자동으로 결과 화면으로 넘어가고 싶으면 아래 2줄 유지
+        updatePreviewSlots();
+        show('result');
+
+      }catch(e){
+        // 취소 등
+      }finally{
+        running = false;
+      }
+    }
+
+    function cancelShoot(){
+      if(abortController) abortController.abort();
+      abortController = null;
+      running = false;
+    }
+
+    // ===== 템플릿 로딩 + PNG 저장(합성) =====
+    function getSlotRectsInPx(w, h){
+      // % -> px
+      const pct = (v) => parseFloat(v) / 100.0;
+      const css = getComputedStyle(document.documentElement);
+
+      const slots = [
+        { left:pct(css.getPropertyValue('--tl-left')), top:pct(css.getPropertyValue('--tl-top')) },
+        { left:pct(css.getPropertyValue('--tr-left')), top:pct(css.getPropertyValue('--tr-top')) },
+        { left:pct(css.getPropertyValue('--bl-left')), top:pct(css.getPropertyValue('--bl-top')) },
+        { left:pct(css.getPropertyValue('--br-left')), top:pct(css.getPropertyValue('--br-top')) },
+      ];
+      const sw = pct(css.getPropertyValue('--slot-w'));
+      const sh = pct(css.getPropertyValue('--slot-h'));
+
+      return slots.map(s => ({
+        x: Math.round(s.left * w),
+        y: Math.round(s.top  * h),
+        w: Math.round(sw * w),
+        h: Math.round(sh * h),
+      }));
+    }
+
+    async function loadImage(src){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('image load fail: ' + src));
+        img.src = src;
+      });
+    }
+
+    // "object-fit:cover"처럼 slot에 맞춰 중앙 크롭하여 그리기
+    function drawCover(ctx, img, dx, dy, dw, dh){
+      const iw = img.width, ih = img.height;
+      const ir = iw/ih, dr = dw/dh;
+
+      let sx=0, sy=0, sw=iw, sh=ih;
+      if(ir > dr){
+        sw = Math.round(ih * dr);
+        sx = Math.round((iw - sw)/2);
+      }else{
+        sh = Math.round(iw / dr);
+        sy = Math.round((ih - sh)/2);
+      }
+      ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh);
+    }
+
+    async function exportPNG(){
+      if(!shots.every(Boolean)){
+        alert('4장 모두 촬영되어야 저장할 수 있어요.');
+        return;
+      }
+
+      // template.png를 실제 픽셀 크기로 불러와서 그 크기에 맞춰 합성
+      let tpl;
+      try{
+        tpl = await loadImage('template.png');
+      }catch(e){
+        alert('template.png를 같은 폴더에 두고 다시 시도해줘.');
+        return;
+      }
+
+      exportCanvas.width = tpl.width;
+      exportCanvas.height = tpl.height;
+
+      const ctx = exportCanvas.getContext('2d');
+      ctx.clearRect(0,0,exportCanvas.width, exportCanvas.height);
+
+      // 템플릿을 먼저 깔고(배경), 위에 사진을 박스 위치에 덮기
+      ctx.drawImage(tpl, 0, 0);
+
+      // 사진 4장 로드
+      const imgs = await Promise.all(shots.map(s => loadImage(s)));
+
+      const rects = getSlotRectsInPx(tpl.width, tpl.height);
+      for(let i=0;i<4;i++){
+        const r = rects[i];
+        drawCover(ctx, imgs[i], r.x, r.y, r.w, r.h);
+      }
+
+      // (선택) 프레임 선/장식이 사진 위에 있어야 한다면 템플릿을 한 번 더 오버레이:
+      // 템플릿에 남색 박스가 실색이면 필요 없음. 반투명/테두리/장식이면 아래를 켜는 게 좋음.
+      // ctx.drawImage(tpl, 0, 0);
+
+      const blob = await new Promise(res => exportCanvas.toBlob(res, 'image/png'));
+      if(!blob){
+        alert('저장에 실패했어(브라우저 제한).');
+        return;
+      }
+
+      const a = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = `insang_4cut_${Date.now()}.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    // ===== 버튼 동작 =====
+    btnStart.addEventListener('click', async () => {
+      resetShots();
+      show('photo');
+
+      try{
+        await openCamera();
+      }catch(e){
+        alert('웹캠 권한이 필요하거나(허용), HTTPS/localhost가 아닐 수 있어요.\n\n' + e.message);
+        show('start');
+        return;
+      }
+
+      runAutoShoot();
+    });
+
+    btnCancel.addEventListener('click', () => {
+      cancelShoot();
+      closeCamera();
+      show('start');
+    });
+
+    btnRetake.addEventListener('click', () => {
+      cancelShoot();
+      resetShots();
+      runAutoShoot();
+    });
+
+    btnSkip.addEventListener('click', () => {
+      updatePreviewSlots();
+      show('result');
+    });
+
+    btnBack.addEventListener('click', () => {
+      // 결과 -> 촬영 화면(다시찍기)
+      cancelShoot();
+      resetShots();
+      show('photo');
+      // 카메라가 꺼져있을 수 있으니 보장
+      (async () => {
+        try{
+          if(!stream) await openCamera();
+          runAutoShoot();
+        }catch(e){
+          alert('웹캠을 다시 열 수 없어요.\n\n' + e.message);
+          closeCamera();
+          show('start');
+        }
+      })();
+    });
+
+    btnSave.addEventListener('click', exportPNG);
+
+    btnHome.addEventListener('click', () => {
+      cancelShoot();
+      closeCamera();
+      resetShots();
+      show('start');
+    });
+
+    // 초기
+    resetShots();
+  </script>
+</body>
+</html>
