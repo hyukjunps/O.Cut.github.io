@@ -7,7 +7,6 @@
 
   <style>
     :root{
-      /* ✅ 연한 핑크 키오스크 */
       --bg1:#fff7fb;
       --bg2:#ffeef6;
       --card: rgba(255,255,255,.86);
@@ -23,7 +22,7 @@
       --r24:24px;
       --r18:18px;
 
-      /* ✅ 현재 선택값(스크립트가 갱신) */
+      /* 비디오/썸네일에 적용되는 CSS 필터(프리뷰 느낌용) */
       --active-filter: none;
     }
 
@@ -41,7 +40,6 @@
       touch-action: manipulation;
     }
 
-    /* App shell */
     .app{height:100dvh; width:100vw; display:flex; flex-direction:column;}
     .topbar{
       height:74px;
@@ -86,7 +84,6 @@
       position:relative;
     }
 
-    /* Big kiosk buttons (but not too huge) */
     .cta{
       border:none; cursor:pointer;
       border-radius: var(--r18);
@@ -221,6 +218,13 @@
     }
     .startBtnRow{margin-top:16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
     .startBtnRow .cta{width:min(260px, 92vw);}
+    .help{
+      margin-top: 10px;
+      color: rgba(123,90,105,.78);
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1.35;
+    }
 
     /* INFO */
     .infoWrap{height:100%; display:grid; place-items:center; padding: 18px;}
@@ -250,13 +254,6 @@
       background: linear-gradient(90deg, rgba(255,111,179,.92), rgba(255,179,211,.92));
       border-radius: 999px;
       transition: width .22s ease;
-    }
-    .help{
-      margin-top: 10px;
-      color: rgba(123,90,105,.78);
-      font-weight: 900;
-      font-size: 12px;
-      line-height: 1.35;
     }
     .infoBtns{margin-top: 12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;}
     .infoBtns .cta{width:min(260px, 92vw);}
@@ -351,7 +348,7 @@
     }
     .thumb img{width:100%; height:100%; object-fit:cover; display:block; filter: var(--active-filter);}
 
-    /* EDIT screens common */
+    /* EDIT screens */
     .editGrid{
       height:100%;
       display:grid;
@@ -381,7 +378,6 @@
       align-items:center;
       justify-content:center;
     }
-    /* ✅ 미리보기는 “저장 캔버스 렌더” 그대로 보여줌(오차 0) */
     .previewCanvas{
       width: min(96%, 520px);
       max-height: 100%;
@@ -428,7 +424,6 @@
     }
     .control:focus{box-shadow: 0 0 0 4px rgba(255,111,179,.12);}
 
-    /* Frame thumbnails (real images) */
     .frameGrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
     .frameBtn{
       border:1px solid var(--stroke);
@@ -461,7 +456,6 @@
       color: rgba(43,27,34,.82);
     }
 
-    /* Filter buttons */
     .filterGrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
     .filterBtn{
       border:1px solid var(--stroke);
@@ -516,8 +510,6 @@
       white-space: pre-wrap;
       display:none;
     }
-
-    /* Canvas hidden for export (preview canvas is shown) */
     #exportCanvas{display:none;}
   </style>
 </head>
@@ -573,7 +565,7 @@
                 10초마다 1장씩 총 4장을 자동 촬영합니다.<br/>
                 촬영 후 <b>필터 → 프레임 → 문구</b>를 선택하고 저장합니다.
               </p>
-              <div class="infoTimer" id="infoTimer">12</div>
+              <div class="infoTimer" id="infoTimer">14</div>
               <div class="infoProgress"><i id="infoBar"></i></div>
 
               <div class="infoBtns">
@@ -630,11 +622,11 @@
           <div class="navBar">
             <button class="cta ghost" id="btnShootHome" type="button">처음</button>
             <div class="stepper" aria-hidden="true">
-              <span class="stepDot on" id="sd1"></span>
-              <span class="stepDot" id="sd2"></span>
-              <span class="stepDot" id="sd3"></span>
-              <span class="stepDot" id="sd4"></span>
-              <span class="stepDot" id="sd5"></span>
+              <span class="stepDot on"></span>
+              <span class="stepDot"></span>
+              <span class="stepDot"></span>
+              <span class="stepDot"></span>
+              <span class="stepDot"></span>
             </div>
             <button class="cta primary" id="btnShootNext" type="button" disabled>다음</button>
           </div>
@@ -658,10 +650,8 @@
               <div class="field">
                 <label>필터 선택</label>
                 <div class="filterGrid" id="filterGrid"></div>
-                <div class="help">선택한 필터는 저장 이미지에도 동일 적용됩니다.</div>
+                <div class="help">오류가 반복되면 관리자에게 문의하세요.</div>
               </div>
-
-              <div class="help">오류가 반복되면 관리자에게 문의하세요.</div>
             </div>
           </div>
 
@@ -670,9 +660,9 @@
             <div class="stepper" aria-hidden="true">
               <span class="stepDot on"></span>
               <span class="stepDot on"></span>
-              <span class="stepDot" ></span>
-              <span class="stepDot" ></span>
-              <span class="stepDot" ></span>
+              <span class="stepDot"></span>
+              <span class="stepDot"></span>
+              <span class="stepDot"></span>
             </div>
             <button class="cta primary" id="btnFilterNext" type="button">다음</button>
           </div>
@@ -709,8 +699,8 @@
               <span class="stepDot on"></span>
               <span class="stepDot on"></span>
               <span class="stepDot on"></span>
-              <span class="stepDot" ></span>
-              <span class="stepDot" ></span>
+              <span class="stepDot"></span>
+              <span class="stepDot"></span>
             </div>
             <button class="cta primary" id="btnFrameNext" type="button">다음</button>
           </div>
@@ -729,7 +719,7 @@
 
             <div class="rightPanel">
               <h2>문구</h2>
-              <p>문구 표시 여부를 버튼으로 선택합니다.</p>
+              <p>문구 표시 여부를 선택합니다.</p>
 
               <div class="field">
                 <label>문구 표시</label>
@@ -737,7 +727,6 @@
                   <button class="cta ghost" id="btnTextOn" type="button" style="flex:1;">ON</button>
                   <button class="cta ghost" id="btnTextOff" type="button" style="flex:1;">OFF</button>
                 </div>
-                <div class="help">OFF면 저장 이미지에도 문구가 포함되지 않습니다.</div>
               </div>
 
               <div class="field">
@@ -753,9 +742,8 @@
                     <input class="control" id="textPos" type="number" min="2" max="18" value="6" step="0.1" />
                   </div>
                 </div>
+                <div class="help">오류가 반복되면 관리자에게 문의하세요.</div>
               </div>
-
-              <div class="help">오류가 반복되면 관리자에게 문의하세요.</div>
             </div>
           </div>
 
@@ -766,7 +754,7 @@
               <span class="stepDot on"></span>
               <span class="stepDot on"></span>
               <span class="stepDot on"></span>
-              <span class="stepDot" ></span>
+              <span class="stepDot"></span>
             </div>
             <button class="cta primary" id="btnTextNext" type="button">다음</button>
           </div>
@@ -827,15 +815,9 @@
   </div>
 
   <script>
-    // ==========================================================
-    // ✅ 핵심 설계
-    // - 미리보기/저장 모두 “동일한 캔버스 렌더 함수(renderComposite)” 사용
-    // - 그래서 프레임/필터/문구/사진 위치가 화면과 저장에서 절대 어긋나지 않음
-    // ==========================================================
-
-    // --------------------------
+    // =========================
     // 화면 전환
-    // --------------------------
+    // =========================
     const statusEl = document.getElementById('status');
     const screens = {
       start:  document.getElementById('screenStart'),
@@ -860,9 +842,9 @@
       statusEl.innerHTML = `<span class="dot"></span>${label}`;
     }
 
-    // --------------------------
+    // =========================
     // 모달
-    // --------------------------
+    // =========================
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalMsg = document.getElementById('modalMsg');
@@ -879,29 +861,59 @@
         modalDetail.textContent = '';
       }
       modal.classList.add('show');
-      speak('오류가 발생했습니다. 관리자에게 문의하세요.');
+      speakNow('오류가 발생했습니다. 관리자에게 문의하세요.');
     }
     function closeModal(){ modal.classList.remove('show'); }
     modalOk.addEventListener('click', closeModal);
     modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
 
-    // --------------------------
-    // TTS
-    // --------------------------
+    // =========================
+    // ✅ TTS: 끊김 해결 (큐 기반)
+    // =========================
     let ttsEnabled = true;
-    function speak(text){
-      if(!ttsEnabled) return;
-      if(!('speechSynthesis' in window)) return;
+    let ttsQueue = Promise.resolve();
+
+    function makeUtter(text){
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'ko-KR';
       u.rate = 1.0;
-      window.speechSynthesis.cancel();
+      u.pitch = 1.0;
+      u.volume = 1.0;
+      return u;
+    }
+
+    // 순서대로 말하기(안내용) — 절대 중간에 끊지 않음
+    function speakQueued(text){
+      if(!ttsEnabled) return;
+      if(!('speechSynthesis' in window)) return;
+      ttsQueue = ttsQueue.then(() => new Promise((resolve) => {
+        const u = makeUtter(text);
+        u.onend = () => resolve();
+        u.onerror = () => resolve();
+        window.speechSynthesis.speak(u);
+      }));
+    }
+
+    // 즉시 말하기(카운트다운 등) — 기존 대기열/발화를 정리하고 말함
+    function speakNow(text){
+      if(!ttsEnabled) return;
+      if(!('speechSynthesis' in window)) return;
+      try{
+        window.speechSynthesis.cancel();
+      }catch(e){}
+      ttsQueue = Promise.resolve();
+      const u = makeUtter(text);
       window.speechSynthesis.speak(u);
     }
 
-    // --------------------------
+    function clearSpeech(){
+      try{ window.speechSynthesis.cancel(); }catch(e){}
+      ttsQueue = Promise.resolve();
+    }
+
+    // =========================
     // DOM
-    // --------------------------
+    // =========================
     const tapToStart = document.getElementById('tapToStart');
     const btnStart = document.getElementById('btnStart');
     const btnStartTTS = document.getElementById('btnStartTTS');
@@ -954,17 +966,15 @@
       document.getElementById('previewCanvas3'),
       document.getElementById('previewCanvas4'),
     ];
-
     const exportCanvas = document.getElementById('exportCanvas');
 
-    // --------------------------
+    // =========================
     // 상태
-    // --------------------------
+    // =========================
     const INTERVAL_SEC = 10;
     const TOTAL_SHOTS = 4;
-
-    // ✅ 안내 화면 길게 + TTS 문장
     const INFO_SECONDS = 14;
+
     const INFO_TTS_LINES = [
       '촬영 안내를 시작합니다.',
       '10초마다 한 장씩 총 4장을 자동 촬영합니다.',
@@ -973,13 +983,44 @@
 
     let stream = null;
     let shots = Array(TOTAL_SHOTS).fill(null);      // dataURL
-    let shotImgs = Array(TOTAL_SHOTS).fill(null);   // HTMLImageElement (export/preview 안정)
+    let shotImgs = Array(TOTAL_SHOTS).fill(null);   // Image()
     let running = false;
     let aborter = null;
 
-    // --------------------------
+    // =========================
+    // 유틸
+    // =========================
+    const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
+    function setCountdownVisible(v){ countdownEl.classList.toggle('show', v); }
+    function setCountdownText(t){ countdownEl.textContent = String(t); }
+    function toast(msg, ms=900){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(()=>toastEl.classList.remove('show'), ms);
+    }
+
+    function setThumb(i){
+      const el = thumbs[i];
+      el.innerHTML = '';
+      if(!shots[i]){ el.textContent = String(i+1); return; }
+      const im = new Image();
+      im.src = shots[i];
+      el.appendChild(im);
+    }
+
+    function resetShots(){
+      shots = Array(TOTAL_SHOTS).fill(null);
+      shotImgs = Array(TOTAL_SHOTS).fill(null);
+      for(let i=0;i<TOTAL_SHOTS;i++) setThumb(i);
+      btnRetake.disabled = true;
+      btnShootNext.disabled = true;
+      refreshAllPreviews();
+    }
+
+    // =========================
     // 필터
-    // --------------------------
+    // =========================
     const FILTERS = [
       { id:'none',  name:'기본',   css:'none',                                            tag:'원본' },
       { id:'bw',    name:'흑백',   css:'grayscale(1) contrast(1.08)',                     tag:'B/W' },
@@ -1005,19 +1046,16 @@
           applyCSSFilter();
           [...filterGrid.querySelectorAll('.filterBtn')].forEach(b=>b.classList.remove('active'));
           btn.classList.add('active');
-          speak('필터가 적용되었습니다.');
+          speakNow('필터가 적용되었습니다.');
           refreshAllPreviews();
         });
         filterGrid.appendChild(btn);
       });
     }
 
-    // --------------------------
-    // 프레임 5개 (파일명: template1.png ~ template5.png)
-    // ✅ 사진 위치(슬롯)는 프레임별로 따로 설정 가능
-    //   - 현재는 “기본값”으로 넣어둠
-    //   - 프레임마다 다르면 아래 SLOT_PERCENT만 수정하면 됨
-    // --------------------------
+    // =========================
+    // 프레임 5개 (template1~5.png)
+    // =========================
     const FRAMES = [
       { id:'t1', name:'템플릿 1', file:'template1.png' },
       { id:'t2', name:'템플릿 2', file:'template2.png' },
@@ -1027,13 +1065,19 @@
     ];
     let selectedFrame = FRAMES[0];
     const frameOK = new Map();
-    const frameImageCache = new Map(); // file -> HTMLImageElement
+    const frameCache = new Map(); // file -> Image()
 
-    // ✅ 슬롯 % (x,y,w,h) 4개 (프레임 이미지 기준)
-    // - 여기 값만 맞추면 “미리보기=저장=완벽 일치”
+    function loadImage(src){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('image load fail: ' + src));
+        img.src = src;
+      });
+    }
+
+    // ✅ 슬롯 위치(퍼센트) — 필요하면 프레임별로 조정
     const SLOT_PERCENT = {
-      // 기본값: 2x2 (사용자 이미지 예시 스타일)
-      // 필요하면 프레임별로 값 다르게 지정 가능 (t1~t5)
       t1: [
         {x:0.05, y:0.23, w:0.44, h:0.22},
         {x:0.51, y:0.23, w:0.44, h:0.22},
@@ -1066,15 +1110,6 @@
       ],
     };
 
-    function loadImage(src){
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error('image load fail: ' + src));
-        img.src = src;
-      });
-    }
-
     async function checkFramesAndRender(){
       frameHealth.textContent = '프레임 점검 중…';
       frameGrid.innerHTML = '';
@@ -1085,7 +1120,7 @@
         try{
           const img = await loadImage(f.file);
           frameOK.set(f.file, true);
-          frameImageCache.set(f.file, img);
+          frameCache.set(f.file, img);
           okCount++;
         }catch(e){
           frameOK.set(f.file, false);
@@ -1119,7 +1154,7 @@
           }
           selectedFrame = f;
           [...frameGrid.querySelectorAll('.frameBtn')].forEach(b=>b.classList.toggle('active', b.dataset.id === f.id));
-          speak('프레임이 적용되었습니다.');
+          speakNow('프레임이 적용되었습니다.');
           refreshAllPreviews();
         });
 
@@ -1131,42 +1166,36 @@
         }
       });
 
-      if(okCount === 0){
-        frameHealth.textContent = '프레임 파일을 찾을 수 없습니다.';
-        openModal('프레임 오류', '프레임 파일을 찾을 수 없습니다. 관리자에게 문의하세요.',
-          '누락 파일:\n- ' + missing.join('\n- ')
-        );
-      }else{
-        frameHealth.textContent = missing.length
-          ? `사용 가능: ${okCount}개 / 누락: ${missing.length}개 (누락 시 관리자 문의)`
-          : `프레임 준비 완료 (${okCount}개)`;
-      }
+      frameHealth.textContent = missing.length
+        ? `사용 가능: ${okCount}개 / 누락: ${missing.length}개 (누락 시 관리자 문의)`
+        : `프레임 준비 완료 (${okCount}개)`;
     }
 
-    // --------------------------
+    // =========================
     // 문구
-    // --------------------------
+    // =========================
     let textEnabled = true;
     function setTextEnabled(on){
       textEnabled = !!on;
       textInput.disabled = !textEnabled;
       textSize.disabled = !textEnabled;
       textPos.disabled = !textEnabled;
-      speak(textEnabled ? '문구가 켜졌습니다.' : '문구가 꺼졌습니다.');
+      speakNow(textEnabled ? '문구가 켜졌습니다.' : '문구가 꺼졌습니다.');
       refreshAllPreviews();
     }
-
     btnTextOn.addEventListener('click', ()=> setTextEnabled(true));
     btnTextOff.addEventListener('click', ()=> setTextEnabled(false));
-    [textInput, textSize, textPos].forEach(el => el.addEventListener('input', ()=> refreshAllPreviews()));
+    [textInput, textSize, textPos].forEach(el => el.addEventListener('input', refreshAllPreviews));
 
-    // --------------------------
-    // 미리보기/저장 공통 렌더
-    // --------------------------
+    // =========================
+    // ✅ 캔버스 합성: 사진이 안보이던 문제 해결
+    // - 템플릿이 슬롯을 불투명으로 갖고 있어도,
+    //   템플릿을 먼저 그리고 사진을 “위에” 슬롯 내부로 넣는다.
+    // - 테두리/라인 남기려고 inset 만큼 안쪽으로 클립한다.
+    // =========================
     function drawCover(ctx, img, dx, dy, dw, dh){
       const iw = img.width, ih = img.height;
       const ir = iw/ih, dr = dw/dh;
-
       let sx=0, sy=0, sw=iw, sh=ih;
       if(ir > dr){
         sw = Math.round(ih * dr);
@@ -1189,30 +1218,15 @@
       ctx.closePath();
     }
 
-    async function renderComposite(targetCanvas, {forExport=false} = {}){
-      // 촬영 전이면 안내 화면 느낌(빈 캔버스)만 표시
-      const hasAll = shotImgs.every(Boolean);
-      const frameOKNow = frameOK.get(selectedFrame.file) !== false;
-      if(!frameOKNow){
-        // 프레임이 없으면 미리보기는 사진만이라도 표시
-        // (저장은 프레임 없으면 막음)
+    async function renderComposite(targetCanvas){
+      const frameOkNow = frameOK.get(selectedFrame.file) !== false;
+      let frameImg = frameCache.get(selectedFrame.file);
+
+      if(frameOkNow && !frameImg){
+        frameImg = await loadImage(selectedFrame.file);
+        frameCache.set(selectedFrame.file, frameImg);
       }
 
-      // 프레임 이미지 로드
-      let frameImg = frameImageCache.get(selectedFrame.file);
-      if(!frameImg && frameOKNow){
-        try{
-          frameImg = await loadImage(selectedFrame.file);
-          frameImageCache.set(selectedFrame.file, frameImg);
-        }catch(e){
-          frameOK.set(selectedFrame.file, false);
-          if(forExport){
-            throw new Error('프레임 로드 실패: ' + selectedFrame.file);
-          }
-        }
-      }
-
-      // 캔버스 크기 설정: 프레임이 있으면 프레임 기준, 없으면 1356x2048 기준
       const baseW = frameImg ? frameImg.width : 1356;
       const baseH = frameImg ? frameImg.height : 2048;
 
@@ -1224,7 +1238,10 @@
       ctx.fillStyle = '#fff';
       ctx.fillRect(0,0,baseW,baseH);
 
-      // 슬롯 rect 계산
+      // 1) 템플릿 먼저 그림(불투명 슬롯이어도 OK)
+      if(frameImg) ctx.drawImage(frameImg, 0, 0);
+
+      // 2) 슬롯 내부에 사진을 위에 덮어 그림(핵심!)
       const rectsP = SLOT_PERCENT[selectedFrame.id] || SLOT_PERCENT.t1;
       const rects = rectsP.map(r => ({
         x: Math.round(r.x * baseW),
@@ -1233,40 +1250,46 @@
         h: Math.round(r.h * baseH),
       }));
 
-      // 사진 먼저(필터 적용)
-      ctx.filter = selectedFilter.css || 'none';
+      const hasAll = shotImgs.every(Boolean);
+
+      // 테두리 남기기 위한 inset(프레임 해상도 비례)
+      const inset = Math.max(6, Math.round(baseW * 0.006)); // 대략 0.6%
+
       if(hasAll){
+        ctx.filter = selectedFilter.css || 'none';
         for(let i=0;i<4;i++){
           const r = rects[i];
-          drawCover(ctx, shotImgs[i], r.x, r.y, r.w, r.h);
+          const ix = r.x + inset;
+          const iy = r.y + inset;
+          const iw = Math.max(1, r.w - inset*2);
+          const ih = Math.max(1, r.h - inset*2);
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.rect(ix, iy, iw, ih);
+          ctx.clip();
+          drawCover(ctx, shotImgs[i], ix, iy, iw, ih);
+          ctx.restore();
         }
-      }else{
-        // 촬영 전/미완료: 플레이스홀더
         ctx.filter = 'none';
-        ctx.fillStyle = 'rgba(31,15,24,.06)';
+      }else{
+        // 촬영 전/미완료: 자리 표시
+        ctx.fillStyle = 'rgba(31,15,24,.08)';
         rects.forEach((r, i)=>{
-          ctx.fillRect(r.x, r.y, r.w, r.h);
-          ctx.fillStyle = 'rgba(123,90,105,.85)';
+          ctx.fillRect(r.x+inset, r.y+inset, r.w-inset*2, r.h-inset*2);
+          ctx.fillStyle = 'rgba(123,90,105,.90)';
           ctx.font = `1000 ${Math.round(baseW*0.03)}px system-ui, -apple-system, "Noto Sans KR", sans-serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText(String(i+1), r.x + r.w/2, r.y + r.h/2);
         });
       }
-      ctx.filter = 'none';
 
-      // 프레임 덮기(항상 위에)
-      if(frameImg){
-        ctx.drawImage(frameImg, 0, 0);
-      }
-
-      // 문구(버튼으로 ON/OFF)
+      // 3) 문구(선택)
       if(textEnabled){
         const txt = (textInput.value || '오늘 네컷 · O.cut').trim();
         const fontPx = Math.max(14, Math.min(52, Number(textSize.value) || 22));
         const bottomPct = Math.max(2, Math.min(18, Number(textPos.value) || 6));
-
-        // 프레임 해상도에 비례해 스케일
         const scaledFont = Math.round(fontPx * (baseW / 1356));
 
         ctx.save();
@@ -1304,38 +1327,15 @@
     }
 
     function refreshAllPreviews(){
-      // 현재 화면에서 바로 “선택 결과가 사진과 어울리는지” 보이도록:
-      // 4개의 preview canvas에 동일 렌더를 다시 그린다.
       previewCanvases.forEach(c => {
         if(!c) return;
         renderComposite(c).catch(()=>{});
       });
     }
 
-    // --------------------------
-    // 촬영 미리보기 썸네일
-    // --------------------------
-    function setThumb(i){
-      const el = thumbs[i];
-      el.innerHTML = '';
-      if(!shots[i]){ el.textContent = String(i+1); return; }
-      const im = new Image();
-      im.src = shots[i];
-      el.appendChild(im);
-    }
-
-    function resetShots(){
-      shots = Array(TOTAL_SHOTS).fill(null);
-      shotImgs = Array(TOTAL_SHOTS).fill(null);
-      for(let i=0;i<TOTAL_SHOTS;i++) setThumb(i);
-      btnRetake.disabled = true;
-      btnShootNext.disabled = true;
-      refreshAllPreviews();
-    }
-
-    // --------------------------
+    // =========================
     // 카메라
-    // --------------------------
+    // =========================
     async function waitForVideoReady(){
       const start = performance.now();
       while((video.videoWidth === 0 || video.videoHeight === 0) && performance.now()-start < 2500){
@@ -1363,19 +1363,9 @@
       video.srcObject = null;
     }
 
-    // --------------------------
+    // =========================
     // 촬영 FX/사운드
-    // --------------------------
-    const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
-    function setCountdownVisible(v){ countdownEl.classList.toggle('show', v); }
-    function setCountdownText(t){ countdownEl.textContent = String(t); }
-    function toast(msg, ms=900){
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastEl._t);
-      toastEl._t = setTimeout(()=>toastEl.classList.remove('show'), ms);
-    }
-
+    // =========================
     let audioCtx = null;
     function clickBeep(){
       try{
@@ -1403,9 +1393,9 @@
       clickBeep();
     }
 
-    // --------------------------
-    // 캡처(안정: 4:3 중앙 크롭 + 미러링)
-    // --------------------------
+    // =========================
+    // 캡처
+    // =========================
     function captureFrameRaw(){
       const vw = video.videoWidth;
       const vh = video.videoHeight;
@@ -1448,9 +1438,9 @@
       return img;
     }
 
-    // --------------------------
-    // 촬영 루프(10초마다 4장 자동)
-    // --------------------------
+    // =========================
+    // 촬영 루프
+    // =========================
     async function runShoot(){
       if(running) return;
       running = true;
@@ -1461,27 +1451,32 @@
       const signal = aborter.signal;
 
       try{
-        speak('촬영을 시작합니다.');
+        speakNow('촬영을 시작합니다.');
         for(let i=0;i<TOTAL_SHOTS;i++){
           if(signal.aborted) throw new Error('aborted');
 
           pillStep.textContent = `촬영 ${i+1} / ${TOTAL_SHOTS}`;
           toast(`${i+1}번째 촬영 준비`, 700);
-          speak(`${i+1}번째 사진, 10초 후 촬영합니다.`);
+
+          // 촬영 안내는 큐로 (끊김 없음)
+          speakQueued(`${i+1}번째 사진, 10초 후 촬영합니다.`);
 
           for(let t=INTERVAL_SEC; t>=1; t--){
             if(signal.aborted) throw new Error('aborted');
             pillMsg.textContent = `${t}초 뒤 촬영`;
             setCountdownText(t);
             setCountdownVisible(true);
-            if(t <= 3) speak(String(t));
+
+            // 3,2,1은 즉시 말하기(짧게), 단 끊김 방지 위해 “큐 말”은 여기서 안 씀
+            if(t <= 3) speakNow(String(t));
+
             await sleep(1000);
           }
 
           setCountdownVisible(false);
           pillMsg.textContent = '찰칵!';
           toast('찰칵!', 650);
-          speak('찰칵');
+          speakNow('찰칵');
 
           shutterFX();
           await sleep(80);
@@ -1496,12 +1491,11 @@
 
         pillMsg.textContent = '촬영 완료';
         toast('촬영 완료', 900);
-        speak('촬영이 완료되었습니다.');
+        speakNow('촬영이 완료되었습니다.');
 
         btnRetake.disabled = false;
         btnShootNext.disabled = false;
         refreshAllPreviews();
-
       } catch(e){
         if(String(e && e.message) !== 'aborted'){
           openModal('촬영 오류', '촬영 중 문제가 발생했습니다. 관리자에게 문의하세요.', e && e.message ? e.message : e);
@@ -1515,30 +1509,27 @@
       if(aborter) aborter.abort();
       aborter = null;
       running = false;
-      try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(e){}
+      clearSpeech();
     }
 
-    // --------------------------
-    // 안내 화면(더 길게 + TTS)
-    // --------------------------
+    // =========================
+    // 안내 화면(끊김 없는 TTS)
+    // =========================
     let infoSkip = false;
 
     btnInfoSkip.addEventListener('click', ()=>{ infoSkip = true; });
 
     btnInfoSilent.addEventListener('click', ()=>{
       ttsEnabled = !ttsEnabled;
-      speak(ttsEnabled ? '안내 음성이 켜졌습니다.' : '안내 음성이 꺼졌습니다.');
+      speakNow(ttsEnabled ? '안내 음성이 켜졌습니다.' : '안내 음성이 꺼졌습니다.');
     });
 
     async function showInfoThenShoot(){
       infoSkip = false;
       show('info');
 
-      for(const line of INFO_TTS_LINES){
-        if(infoSkip) break;
-        speak(line);
-        await sleep(700);
-      }
+      // 안내 문장: 큐로 (절대 끊김 없음)
+      INFO_TTS_LINES.forEach(line => speakQueued(line));
 
       for(let t=INFO_SECONDS; t>=1; t--){
         if(infoSkip) break;
@@ -1564,9 +1555,9 @@
       runShoot();
     }
 
-    // --------------------------
-    // 저장(PNG) — “사진 먼저 + 프레임 덮기” 렌더 그대로 exportCanvas로
-    // --------------------------
+    // =========================
+    // 저장
+    // =========================
     async function exportPNG(){
       if(!shotImgs.every(Boolean)){
         openModal('저장 불가', '촬영이 완료되지 않았습니다. 관리자에게 문의하세요.', '');
@@ -1578,7 +1569,7 @@
       }
 
       try{
-        await renderComposite(exportCanvas, {forExport:true});
+        await renderComposite(exportCanvas);
       }catch(e){
         openModal('저장 오류', '저장을 진행할 수 없습니다. 관리자에게 문의하세요.', e && e.message ? e.message : e);
         return;
@@ -1599,12 +1590,12 @@
       a.remove();
       URL.revokeObjectURL(url);
 
-      speak('저장되었습니다.');
+      speakNow('저장되었습니다.');
     }
 
-    // --------------------------
-    // 네비/흐름
-    // --------------------------
+    // =========================
+    // 흐름
+    // =========================
     function goHome(){
       cancelShoot();
       closeCamera();
@@ -1620,7 +1611,7 @@
       await showInfoThenShoot();
     }
 
-    // Start buttons
+    // Start
     tapToStart.addEventListener('click', startFlow);
     btnStart.addEventListener('click', (e)=>{ e.stopPropagation(); startFlow(); });
     tapToStart.addEventListener('keydown', (e)=>{
@@ -1631,7 +1622,7 @@
       e.stopPropagation();
       ttsEnabled = !ttsEnabled;
       btnStartTTS.textContent = ttsEnabled ? '안내 음성 ON' : '안내 음성 OFF';
-      speak(ttsEnabled ? '안내 음성이 켜졌습니다.' : '안내 음성이 꺼졌습니다.');
+      speakNow(ttsEnabled ? '안내 음성이 켜졌습니다.' : '안내 음성이 꺼졌습니다.');
     });
 
     // Shoot controls
@@ -1639,10 +1630,10 @@
     btnRetake.addEventListener('click', ()=>{
       cancelShoot();
       resetShots();
-      speak('다시 촬영을 시작합니다.');
+      speakNow('다시 촬영을 시작합니다.');
       runShoot();
     });
-    btnShootHome.addEventListener('click', ()=> goHome());
+    btnShootHome.addEventListener('click', goHome);
     btnShootNext.addEventListener('click', ()=>{
       if(!shotImgs.every(Boolean)){
         openModal('이동 불가', '촬영이 완료되지 않았습니다. 관리자에게 문의하세요.', '');
@@ -1652,7 +1643,7 @@
       refreshAllPreviews();
     });
 
-    // Filter / Frame / Text / Save nav
+    // Nav
     btnFilterBack.addEventListener('click', ()=> show('shoot'));
     btnFilterNext.addEventListener('click', ()=> { show('frame'); refreshAllPreviews(); });
 
@@ -1663,28 +1654,20 @@
     btnTextNext.addEventListener('click', ()=> { show('save'); refreshAllPreviews(); });
 
     btnSaveBack.addEventListener('click', ()=> { show('text'); refreshAllPreviews(); });
-    btnDone.addEventListener('click', ()=> goHome());
+    btnDone.addEventListener('click', goHome);
 
     btnSave.addEventListener('click', exportPNG);
-    btnHome.addEventListener('click', ()=> goHome());
+    btnHome.addEventListener('click', goHome);
 
-    // --------------------------
+    // =========================
     // 초기화
-    // --------------------------
+    // =========================
     (async function init(){
       resetShots();
-
-      // 기본 값
       textInput.value = '오늘 네컷 · O.cut';
       applyCSSFilter();
       renderFilterButtons();
-
-      try{
-        await checkFramesAndRender();
-      }catch(e){
-        openModal('초기화 오류', '초기 설정 중 문제가 발생했습니다. 관리자에게 문의하세요.', e && e.message ? e.message : e);
-      }
-
+      await checkFramesAndRender();
       refreshAllPreviews();
       show('start');
     })();
