@@ -4,25 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>O.cut · 오늘 네컷</title>
+
   <style>
     :root{
-      /* ✅ 연한 핑크 키오스크 톤 */
-      --bg1:#ffeaf3;
-      --bg2:#fff7fb;
-      --card: rgba(255,255,255,.92);
-      --stroke:#f6c9dd;
+      /* ✅ 연한 핑크 중심 */
+      --bg1:#fff7fb;
+      --bg2:#ffeef6;
+      --card: rgba(255,255,255,.88);
+      --stroke: rgba(255,160,200,.35);
       --text:#2b1b22;
-      --muted:#7a5a68;
-      --pri:#ff4fa3;
-      --pri2:#ff86bf;
-      --shadow: 0 28px 90px rgba(31,15,24,.12);
-      --shadow2: 0 16px 48px rgba(31,15,24,.10);
+      --muted:#7b5a69;
 
-      /* ✅ 프레임/필터 */
-      --frame-url: "template1.png";
+      --pri:#ff6fb3;
+      --pri2:#ff9acb;
+
+      --shadow: 0 18px 60px rgba(31,15,24,.12);
+      --shadow2: 0 10px 26px rgba(31,15,24,.08);
+
+      /* ✅ 프레임 파일(따옴표 없이) */
+      --frame-url: template1.png;
+
+      /* ✅ 프리뷰 필터 */
       --preview-filter: none;
 
-      /* ✅ 기본 슬롯(프레임별로 JS에서 덮어씀) */
+      /* ✅ 슬롯 위치(기본값: 필요 시 프레임별로 바뀜) */
       --tl-left: 4%;
       --tl-top: 24%;
       --tr-left: 52%;
@@ -33,7 +38,7 @@
       --br-top: 54%;
       --slot-w: 44%;
       --slot-h: 22%;
-      --slot-r: 18px;
+      --slot-r: 16px;
     }
 
     *{box-sizing:border-box;}
@@ -43,321 +48,310 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
       color:var(--text);
       background:
-        radial-gradient(1200px 900px at 20% 18%, rgba(255,79,163,.18) 0%, rgba(255,255,255,0) 60%),
-        radial-gradient(1200px 900px at 80% 86%, rgba(255,134,191,.16) 0%, rgba(255,255,255,0) 60%),
+        radial-gradient(1000px 800px at 20% 20%, rgba(255,154,203,.22) 0%, rgba(255,255,255,0) 60%),
+        radial-gradient(900px 700px at 80% 85%, rgba(255,111,179,.14) 0%, rgba(255,255,255,0) 62%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
       overflow:hidden;
       touch-action: manipulation;
     }
 
-    /* ===== KIOSK SHELL ===== */
+    /* ✅ 전체 스케일: “너무 큼” 해결 */
     .app{height:100dvh; width:100vw; display:flex; flex-direction:column;}
     .topbar{
-      height:98px;
+      height:78px;
       display:flex;
       align-items:center;
       justify-content:space-between;
-      padding:0 clamp(18px, 2.2vw, 30px);
-      background: linear-gradient(90deg, rgba(255,79,163,.16), rgba(255,255,255,.92));
-      border-bottom:1px solid rgba(246,201,221,.95);
-      backdrop-filter: blur(12px);
+      padding:0 clamp(14px, 2vw, 22px);
+      background: linear-gradient(90deg, rgba(255,111,179,.14), rgba(255,255,255,.82));
+      border-bottom:1px solid var(--stroke);
+      backdrop-filter: blur(10px);
       flex:0 0 auto;
     }
-    .brand{
-      display:flex; align-items:center; gap:14px;
-      font-weight:1000; letter-spacing:-.8px;
-    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:1000; letter-spacing:-.6px;}
     .logo{
-      width:22px; height:22px;
-      border-radius:8px;
-      background: radial-gradient(circle at 30% 30%, #fff 0%, #ffd2e6 40%, var(--pri) 100%);
-      box-shadow: 0 0 0 12px rgba(255,79,163,.10), 0 14px 40px rgba(255,79,163,.12);
-      transform: rotate(12deg);
+      width:16px; height:16px; border-radius:6px;
+      background: radial-gradient(circle at 30% 30%, #fff 0%, #ffd2e8 42%, var(--pri) 100%);
+      box-shadow: 0 0 0 10px rgba(255,111,179,.10);
+      transform: rotate(10deg);
     }
-    .brandText b{display:block; font-size:28px; line-height:1;}
-    .brandText small{display:block; margin-top:6px; font-size:14px; font-weight:950; color:rgba(122,90,104,.82);}
-
-    .status{
-      display:flex; align-items:center; gap:12px;
-      font-weight:1000; font-size:18px; color:rgba(43,27,34,.86);
-    }
-    .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: rgba(255,79,163,.92);
-      box-shadow: 0 0 0 9px rgba(255,79,163,.12);
-    }
+    .brandText b{display:block; font-size:20px; line-height:1;}
+    .brandText small{display:block; margin-top:4px; font-size:12px; font-weight:950; color:rgba(123,90,105,.85);}
+    .status{display:flex; align-items:center; gap:10px; font-weight:1000; font-size:14px; color:rgba(43,27,34,.80);}
+    .dot{width:8px; height:8px; border-radius:999px; background: rgba(255,111,179,.92); box-shadow: 0 0 0 7px rgba(255,111,179,.12);}
 
     .main{flex:1; min-height:0;}
-    .screen{display:none; height:100%; padding:clamp(16px, 2.2vw, 26px);}
+    .screen{display:none; height:100%; padding:clamp(12px, 1.8vw, 18px);}
     .screen.active{display:block;}
 
     .panel{
       height:100%;
       background: var(--card);
-      border:1px solid rgba(246,201,221,.95);
-      border-radius:36px;
+      border:1px solid var(--stroke);
+      border-radius:26px;
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
     }
 
-    /* ===== BIG KIOSK BUTTONS ===== */
+    /* ✅ 버튼: 크기 줄임 */
     .cta{
-      border:none;
-      cursor:pointer;
-      border-radius:28px;
-      padding:28px 26px;
+      border:none; cursor:pointer;
+      border-radius:18px;
+      padding:16px 16px;
       font-weight:1000;
-      font-size:26px;
+      font-size:18px;
       letter-spacing:-.2px;
       user-select:none;
-      transition: transform .08s ease, filter .18s ease;
-      min-height: 86px;
+      transition: transform .08s ease, filter .16s ease;
+      min-height: 58px;
     }
-    .cta.primary{
-      background: linear-gradient(180deg, rgba(255,79,163,.98), rgba(255,134,191,.98));
-      color:#fff;
-      box-shadow: 0 22px 60px rgba(255,79,163,.18);
-    }
-    .cta.ghost{
-      background: rgba(255,255,255,.92);
-      border:1px solid rgba(255,79,163,.26);
-      color:var(--text);
-      box-shadow: var(--shadow2);
-    }
-    .cta.danger{
-      background: rgba(255,79,163,.08);
-      border:1px solid rgba(255,79,163,.22);
-      color:var(--text);
-      box-shadow: var(--shadow2);
-    }
-    .cta:active{transform: translateY(2px) scale(.99);}
-    .cta:disabled{opacity:.55; cursor:not-allowed; filter: grayscale(.2);}
+    .cta.primary{background: linear-gradient(180deg, rgba(255,111,179,.98), rgba(255,154,203,.98)); color:#fff; box-shadow: 0 16px 40px rgba(255,111,179,.16);}
+    .cta.ghost{background: rgba(255,255,255,.92); border:1px solid rgba(255,111,179,.24); color:var(--text); box-shadow: var(--shadow2);}
+    .cta.danger{background: rgba(255,111,179,.08); border:1px solid rgba(255,111,179,.20); color:var(--text); box-shadow: var(--shadow2);}
+    .cta:active{transform: translateY(1px) scale(.99);}
+    .cta:disabled{opacity:.55; cursor:not-allowed; filter: grayscale(.15);}
 
+    /* ✅ 하단 네비 (키오스크 느낌 유지) */
     .navBar{
       position:absolute; left:0; right:0; bottom:0;
-      display:flex; gap:14px; padding:16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.92));
-      border-top: 1px solid rgba(246,201,221,.9);
+      display:flex; gap:10px; padding:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,.88));
+      border-top: 1px solid var(--stroke);
       backdrop-filter: blur(10px);
     }
-    .navBar .cta{flex:1; min-width: 220px; font-size:22px; padding:22px 22px; border-radius:24px; min-height:74px;}
+    .navBar .cta{flex:1; min-width: 150px; font-size:16px; padding:14px 14px; border-radius:16px; min-height:52px;}
 
-    /* ===== START (요청대로 매우 간단) ===== */
+    /* =======================
+       START (홈 화면 개선 + 동적)
+       ======================= */
     .startWrap{
       height:100%;
       display:grid;
       place-items:center;
       text-align:center;
       user-select:none;
-      padding: 24px;
+      padding: 18px;
+      position:relative;
+      overflow:hidden;
+    }
+    .bubbles{
+      position:absolute; inset:-40px;
+      pointer-events:none;
+      opacity:.85;
+      filter: blur(.2px);
+    }
+    .bubble{
+      position:absolute;
+      width: 220px; height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.85) 0%, rgba(255,154,203,.35) 45%, rgba(255,111,179,.18) 100%);
+      animation: float 6.8s ease-in-out infinite;
+      box-shadow: 0 18px 60px rgba(255,111,179,.08);
+    }
+    .bubble.b2{width: 260px; height:260px; animation-duration: 8.2s; opacity:.72;}
+    .bubble.b3{width: 180px; height:180px; animation-duration: 7.4s; opacity:.65;}
+    @keyframes float{
+      0%,100%{transform: translateY(0) translateX(0) scale(1);}
+      50%{transform: translateY(-18px) translateX(10px) scale(1.02);}
+    }
+
+    .startCard{
+      width: min(720px, 94vw);
+      border-radius: 26px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.86);
+      box-shadow: var(--shadow2);
+      padding: 22px 18px;
+      position:relative;
+      overflow:hidden;
+      backdrop-filter: blur(10px);
     }
     .startTitle{
       margin:0;
-      font-size: clamp(64px, 8vw, 128px);
-      line-height:1.0;
-      letter-spacing:-2.6px;
+      font-size: clamp(42px, 5.8vw, 76px);
+      line-height:1.02;
+      letter-spacing:-2px;
       font-weight:1000;
-      background: linear-gradient(90deg, rgba(255,79,163,1), rgba(255,134,191,1));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-      filter: drop-shadow(0 18px 55px rgba(31,15,24,.10));
+      background: linear-gradient(90deg, rgba(255,111,179,1), rgba(255,154,203,1));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
     }
     .startSub{
-      margin:18px 0 0;
+      margin:12px 0 0;
       font-weight:1000;
-      font-size: clamp(20px, 2.4vw, 32px);
-      color: rgba(122,90,104,.90);
-      letter-spacing:-.4px;
+      font-size: clamp(14px, 2.0vw, 18px);
+      color: rgba(123,90,105,.92);
+      letter-spacing:-.3px;
     }
-    .startBtnRow{margin-top:28px; display:flex; justify-content:center;}
-    .startBtnRow .cta{width:min(720px, 92vw); font-size:28px; padding:32px 28px;}
+    .startHint{
+      margin:14px auto 0;
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,111,179,.10);
+      border:1px solid var(--stroke);
+      font-weight:1000;
+      font-size: 14px;
+      color: rgba(43,27,34,.92);
+    }
+    .pulse{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(255,111,179,.95);
+      box-shadow: 0 0 0 0 rgba(255,111,179,.25);
+      animation: pulse 1.3s infinite;
+    }
+    @keyframes pulse{
+      0%{box-shadow: 0 0 0 0 rgba(255,111,179,.28);}
+      70%{box-shadow: 0 0 0 14px rgba(255,111,179,0);}
+      100%{box-shadow: 0 0 0 0 rgba(255,111,179,0);}
+    }
+    .startBtnRow{margin-top:16px; display:flex; justify-content:center;}
+    .startBtnRow .cta{width:min(460px, 92vw); font-size:18px; padding:16px 16px; min-height:60px;}
 
-    /* ===== INFO ===== */
-    .infoWrap{
-      height:100%;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding: 24px;
-    }
+    /* INFO */
+    .infoWrap{height:100%; display:grid; place-items:center; text-align:center; padding: 18px;}
     .infoBox{
-      width:min(900px, 94vw);
-      border-radius:36px;
-      background: rgba(255,255,255,.94);
-      border:1px solid rgba(246,201,221,.95);
+      width:min(820px, 94vw);
+      border-radius:26px;
+      background: rgba(255,255,255,.90);
+      border:1px solid var(--stroke);
       box-shadow: var(--shadow2);
-      padding: clamp(26px, 3vw, 44px);
+      padding: 20px 16px;
     }
-    .infoBox h2{
-      margin:0;
-      font-size: clamp(34px, 3.8vw, 56px);
-      letter-spacing:-1.2px;
-      font-weight:1000;
+    .infoBox h2{margin:0; font-size: clamp(22px, 3.4vw, 34px); letter-spacing:-1px; font-weight:1000;}
+    .infoBox p{margin:10px 0 0; color: rgba(123,90,105,.92); font-weight:950; font-size: clamp(14px, 2.2vw, 18px); line-height:1.6;}
+    .infoTimer{margin-top:12px; font-weight:1000; font-size: clamp(44px, 6.2vw, 66px); letter-spacing:-1px;}
+    .infoProgress{
+      margin-top: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(31,15,24,.08);
+      overflow:hidden;
+      border: 1px solid var(--stroke);
     }
-    .infoBox p{
-      margin:14px 0 0;
-      color: rgba(122,90,104,.92);
-      font-weight:950;
-      font-size: clamp(18px, 2.3vw, 28px);
-      line-height:1.6;
+    .infoProgress > i{
+      display:block; height:100%; width:0%;
+      background: linear-gradient(90deg, rgba(255,111,179,.92), rgba(255,154,203,.92));
+      border-radius: 999px;
+      transition: width .22s ease;
     }
-    .infoTimer{
-      margin-top:18px;
-      font-weight:1000;
-      font-size: clamp(70px, 7.8vw, 102px);
-      letter-spacing:-2px;
-    }
+    .infoSkipRow{margin-top: 12px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;}
+    .infoSkipRow .cta{min-height:52px; font-size:16px; padding:14px 14px; border-radius:16px; width: min(320px, 92vw);}
 
-    /* ===== SHOOT ===== */
-    .shootGrid{
-      height:100%;
-      display:grid;
-      grid-template-columns: 1.6fr .75fr;
-      gap:18px;
-      padding-bottom: 88px; /* navBar 공간 */
-    }
+    /* SHOOT */
+    .shootGrid{height:100%; display:grid; grid-template-columns: 1.55fr .75fr; gap:14px; padding-bottom: 72px;}
     @media (max-width: 980px){ .shootGrid{grid-template-columns:1fr;} }
 
     .videoWrap{
-      border-radius:36px;
-      overflow:hidden;
-      border:1px solid rgba(246,201,221,.95);
+      border-radius:26px; overflow:hidden;
+      border:1px solid var(--stroke);
       background:#000;
       position:relative;
       min-height:0;
       height:100%;
       box-shadow: var(--shadow2);
     }
-    video{
-      width:100%;
-      height:100%;
-      display:block;
-      object-fit:cover;
-      transform: scaleX(-1);
-      filter: var(--preview-filter);
-    }
-    .flash{
-      position:absolute; inset:0;
-      background:#fff;
-      opacity:0;
-      pointer-events:none;
-      z-index:3;
-    }
+    video{width:100%; height:100%; display:block; object-fit:cover; transform: scaleX(-1); filter: var(--preview-filter);}
+    .flash{position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:3;}
     .flash.on{ animation: flash 240ms ease-out; }
     @keyframes flash{ 0%{opacity:0} 10%{opacity:.95} 100%{opacity:0} }
 
     .hud{position:absolute; inset:0; pointer-events:none; z-index:4;}
-    .hudTop{position:absolute; left:18px; top:18px; display:flex; gap:12px; flex-wrap:wrap;}
+    .hudTop{position:absolute; left:14px; top:14px; display:flex; gap:10px; flex-wrap:wrap;}
     .pill{
-      padding:14px 18px;
-      border-radius:999px;
+      padding:10px 12px; border-radius:999px;
       background: rgba(255,255,255,.86);
-      border:1px solid rgba(246,201,221,.95);
+      border:1px solid var(--stroke);
       color: rgba(43,27,34,.92);
-      font-size:18px;
-      font-weight:1000;
-      letter-spacing:-.2px;
-      box-shadow: 0 12px 40px rgba(31,15,24,.08);
+      font-size:14px; font-weight:1000;
+      box-shadow: 0 10px 28px rgba(31,15,24,.06);
     }
     .count{
       position:absolute; inset:0;
       display:flex; align-items:center; justify-content:center;
-      font-size: clamp(110px, 16vw, 190px);
-      font-weight:1000;
-      color:#fff;
-      text-shadow: 0 12px 80px rgba(0,0,0,.70);
-      opacity:0;
-      transform: scale(.96);
+      font-size: clamp(72px, 12vw, 120px);
+      font-weight:1000; color:#fff;
+      text-shadow: 0 12px 80px rgba(0,0,0,.65);
+      opacity:0; transform: scale(.96);
       transition: opacity .12s ease, transform .12s ease;
     }
     .count.show{opacity:1; transform: scale(1);}
-
     .toast{
-      position:absolute;
-      left:50%; bottom:26px;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,.94);
-      border:1px solid rgba(246,201,221,.95);
+      position:absolute; left:50%; bottom:18px; transform: translateX(-50%);
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--stroke);
       border-radius:999px;
-      padding:18px 22px;
+      padding:12px 14px;
       font-weight:1000;
-      letter-spacing:-.2px;
       box-shadow: var(--shadow2);
-      opacity:0;
-      pointer-events:none;
+      opacity:0; pointer-events:none;
       transition: opacity .18s ease, transform .18s ease;
-      z-index:5;
-      font-size: 20px;
+      z-index:5; font-size: 14px;
     }
-    .toast.show{opacity:1; transform: translateX(-50%) translateY(-10px);}
+    .toast.show{opacity:1; transform: translateX(-50%) translateY(-8px);}
 
-    .sideCol{height:100%; display:flex; flex-direction:column; gap:18px;}
+    .sideCol{height:100%; display:flex; flex-direction:column; gap:14px;}
     .cardBox{
-      background: rgba(255,255,255,.94);
-      border:1px solid rgba(246,201,221,.95);
-      border-radius:36px;
-      padding:18px;
-      overflow:hidden;
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--stroke);
+      border-radius:26px;
+      padding:14px;
       box-shadow: var(--shadow2);
     }
-    .cardTitle{font-weight:1000; letter-spacing:-.4px; margin-bottom:14px; font-size: clamp(20px, 2.2vw, 26px);}
-    .thumbGrid{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
+    .cardTitle{font-weight:1000; margin-bottom:10px; font-size:16px; letter-spacing:-.3px;}
+    .thumbGrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
     .thumb{
-      border-radius:22px;
-      overflow:hidden;
-      border:1px solid rgba(246,201,221,.95);
-      background: linear-gradient(180deg, #fff, #fff3f8);
+      border-radius:16px; overflow:hidden;
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, #fff, #fff2f8);
       aspect-ratio: 4/3;
       display:flex; align-items:center; justify-content:center;
-      color: rgba(122,90,104,.85);
+      color: rgba(123,90,105,.85);
       font-weight:1000;
-      font-size: clamp(16px, 1.9vw, 20px);
+      font-size:14px;
       text-align:center;
     }
     .thumb img{width:100%; height:100%; object-fit:cover; display:block; filter: var(--preview-filter);}
 
-    /* ===== EDIT SCREENS COMMON ===== */
-    .editGrid{
-      height:100%;
-      display:grid;
-      grid-template-columns: 1fr .8fr;
-      gap:18px;
-      padding-bottom: 88px; /* navBar */
-    }
+    /* EDIT COMMON */
+    .editGrid{height:100%; display:grid; grid-template-columns: 1fr .85fr; gap:14px; padding-bottom: 72px;}
     @media (max-width: 980px){ .editGrid{grid-template-columns:1fr;} }
 
     .stage{
       height:100%;
-      border-radius:36px;
+      border-radius:26px;
       overflow:hidden;
-      border:1px solid rgba(246,201,221,.95);
-      background: rgba(255,255,255,.94);
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.92);
       box-shadow: var(--shadow2);
+      display:flex; align-items:center; justify-content:center;
+      padding: 12px;
       position:relative;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: clamp(10px, 1.8vw, 18px);
     }
 
+    /* ✅ 프레임 적용 안정화:
+       background-image를 분리하고 var는 파일명만 들어가게 */
     .frame{
       width:100%;
       height:100%;
-      max-width: min(100%, calc((100dvh - 98px - 48px) * (1356/2048)));
+      max-width: min(100%, calc((100dvh - 78px - 40px) * (1356/2048)));
       max-height: 100%;
       aspect-ratio: 1356/2048;
-      border-radius:28px;
+      border-radius:20px;
       overflow:hidden;
       position:relative;
-      background: url(var(--frame-url)) center/cover no-repeat, #fff;
-      border:1px solid rgba(246,201,221,.95);
-      box-shadow: 0 22px 90px rgba(31,15,24,.10);
-      transform: translateZ(0);
+      border:1px solid var(--stroke);
+      box-shadow: 0 18px 70px rgba(31,15,24,.10);
+      background-color:#fff;
+      background-image: url(var(--frame-url));
+      background-position:center;
+      background-size:cover;
+      background-repeat:no-repeat;
     }
 
-    .slot{position:absolute; z-index:2; border-radius: var(--slot-r); overflow:hidden; background:transparent;}
+    .slot{position:absolute; z-index:2; border-radius: var(--slot-r); overflow:hidden;}
     .slot img{width:100%; height:100%; object-fit:cover; display:block; filter: var(--preview-filter);}
     #slot1{ left:var(--tl-left); top:var(--tl-top); width:var(--slot-w); height:var(--slot-h); }
     #slot2{ left:var(--tr-left); top:var(--tr-top); width:var(--slot-w); height:var(--slot-h); }
@@ -365,22 +359,20 @@
     #slot4{ left:var(--br-left); top:var(--br-top); width:var(--slot-w); height:var(--slot-h); }
 
     .overlayText{
-      position:absolute;
-      left:50%;
+      position:absolute; left:50%;
       transform: translateX(-50%);
-      bottom: 4.8%;
+      bottom: 5%;
       z-index: 4;
       color:#111;
       font-weight: 1000;
-      letter-spacing: -.4px;
+      letter-spacing: -.3px;
       text-align:center;
-      font-size: clamp(18px, 2.4vw, 34px);
-      text-shadow: 0 6px 18px rgba(255,255,255,.55);
-      padding: 14px 18px;
-      border-radius: 20px;
+      font-size: 18px;
+      padding: 10px 12px;
+      border-radius: 16px;
       background: rgba(255,255,255,.70);
-      border: 1px solid rgba(246,201,221,.95);
-      backdrop-filter: blur(12px);
+      border: 1px solid var(--stroke);
+      backdrop-filter: blur(10px);
       max-width: 92%;
       white-space: nowrap;
       overflow: hidden;
@@ -388,218 +380,133 @@
       pointer-events: none;
       user-select:none;
     }
+    .overlayText.off{display:none;}
 
     .rightPanel{
       height:100%;
-      background: rgba(255,255,255,.94);
-      border:1px solid rgba(246,201,221,.95);
-      border-radius:36px;
-      padding: 20px;
+      background: rgba(255,255,255,.92);
+      border:1px solid var(--stroke);
+      border-radius:26px;
+      padding: 14px;
       display:flex;
       flex-direction:column;
-      gap:14px;
+      gap:12px;
       box-shadow: var(--shadow2);
       overflow:auto;
     }
-    .rightPanel h2{
-      margin:0;
-      font-weight:1000;
-      letter-spacing:-.6px;
-      font-size: clamp(30px, 3vw, 40px);
-    }
-    .rightPanel p{
-      margin:0;
-      color: rgba(122,90,104,.92);
-      font-weight:950;
-      line-height:1.55;
-      font-size: clamp(18px, 2.1vw, 24px);
-    }
+    .rightPanel h2{margin:0; font-weight:1000; letter-spacing:-.5px; font-size:20px;}
+    .rightPanel p{margin:0; color: rgba(123,90,105,.92); font-weight:950; line-height:1.5; font-size:14px;}
 
     .field{
       display:flex; flex-direction:column; gap:10px;
-      padding: 16px 16px;
-      border-radius: 26px;
-      border: 1px solid rgba(246,201,221,.95);
-      background: rgba(255,255,255,.78);
-      box-shadow: 0 14px 40px rgba(31,15,24,.06);
+      padding: 12px;
+      border-radius: 20px;
+      border: 1px solid var(--stroke);
+      background: rgba(255,255,255,.82);
+      box-shadow: 0 10px 26px rgba(31,15,24,.05);
     }
-    .field label{
-      font-weight: 1000;
-      letter-spacing:-.3px;
-      color: rgba(43,27,34,.92);
-      font-size: 16px;
-    }
+    .field label{font-weight: 1000; color: rgba(43,27,34,.92); font-size: 13px;}
     .control{
-      height: 66px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,79,163,.24);
+      height: 46px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,111,179,.22);
       background: rgba(255,255,255,.92);
-      padding: 0 16px;
+      padding: 0 12px;
       font-weight: 1000;
-      font-size: 22px;
+      font-size: 15px;
       outline: none;
     }
-    .control:focus{box-shadow: 0 0 0 5px rgba(255,79,163,.14);}
+    .control:focus{box-shadow: 0 0 0 4px rgba(255,111,179,.12);}
+    .row2{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
+    .help{color: rgba(123,90,105,.78); font-weight: 900; font-size: 12px; line-height: 1.35;}
 
-    .row2{display:grid; grid-template-columns: 1fr 1fr; gap:12px;}
-    .help{
-      color: rgba(122,90,104,.78);
-      font-weight: 900;
-      font-size: 14px;
-      line-height: 1.35;
-    }
-
-    /* ===== FRAME PICKER (이미지로 선택) ===== */
-    .frameGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-    }
+    /* ✅ 프레임: “1~5 글자” 대신 ‘전체 프레임 이미지’ 버튼 */
+    .frameGrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
     .frameBtn{
-      border:1px solid rgba(246,201,221,.95);
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.92);
-      border-radius: 26px;
+      border-radius: 18px;
       overflow:hidden;
       cursor:pointer;
-      box-shadow: 0 14px 40px rgba(31,15,24,.08);
-      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
+      box-shadow: 0 12px 30px rgba(31,15,24,.08);
+      transition: transform .08s ease, box-shadow .16s ease, border-color .16s ease;
       position:relative;
-      min-height: 190px;
-      display:flex;
-      flex-direction:column;
+      display:flex; flex-direction:column;
     }
-    .frameBtn:active{transform: translateY(2px) scale(.99);}
-    .frameBtn img{
-      width:100%;
-      height: 170px;
-      object-fit:cover;
-      display:block;
-      background: linear-gradient(180deg, #fff, #fff3f8);
-    }
+    .frameBtn:active{transform: translateY(1px) scale(.99);}
+    .frameBtn img{width:100%; height: 112px; object-fit:cover; display:block; background: linear-gradient(180deg, #fff, #fff2f8);}
     .frameBtn .meta{
-      padding: 12px 14px;
-      display:flex; justify-content:space-between; align-items:center;
-      gap:10px;
-      font-weight:1000;
-      font-size: 18px;
-      color: rgba(43,27,34,.92);
+      padding: 10px 10px;
+      display:flex; justify-content:space-between; align-items:center; gap:8px;
+      font-weight:1000; font-size: 13px; color: rgba(43,27,34,.92);
     }
-    .badge{
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,79,163,.10);
-      border: 1px solid rgba(255,79,163,.22);
-      font-size: 12px;
-      white-space:nowrap;
-      color: rgba(43,27,34,.92);
-    }
-    .frameBtn.active{
-      border-color: rgba(255,79,163,.42);
-      box-shadow: 0 18px 55px rgba(255,79,163,.14);
-    }
-    .frameBtn.disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      filter: grayscale(.2);
-    }
+    .badge{padding: 6px 8px; border-radius: 999px; background: rgba(255,111,179,.10); border: 1px solid rgba(255,111,179,.20); font-size: 11px; white-space:nowrap;}
+    .frameBtn.active{border-color: rgba(255,111,179,.40); box-shadow: 0 16px 40px rgba(255,111,179,.12);}
+    .frameBtn.disabled{opacity:.55; cursor:not-allowed; filter: grayscale(.15);}
     .frameBtn.disabled::after{
-      content:"없음";
-      position:absolute;
-      top: 10px; right: 10px;
-      padding: 8px 10px;
-      border-radius: 999px;
+      content:"관리자 문의";
+      position:absolute; top: 8px; right: 8px;
+      padding: 6px 8px; border-radius: 999px;
       background: rgba(31,15,24,.10);
-      border: 1px solid rgba(31,15,24,.16);
-      font-weight: 1000;
-      font-size: 12px;
+      border: 1px solid rgba(31,15,24,.14);
+      font-weight: 1000; font-size: 11px;
       color: rgba(43,27,34,.82);
     }
 
-    /* ===== FILTER PICKER ===== */
-    .filterGrid{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
+    /* filter */
+    .filterGrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px;}
     .filterBtn{
-      border:1px solid rgba(246,201,221,.95);
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.92);
-      border-radius: 24px;
-      padding: 16px 16px;
+      border-radius: 18px;
+      padding: 12px 12px;
       cursor:pointer;
-      box-shadow: 0 12px 36px rgba(31,15,24,.06);
-      transition: transform .08s ease, box-shadow .18s ease, border-color .18s ease;
-      min-height: 86px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      font-weight:1000;
-      font-size: 20px;
+      box-shadow: 0 10px 26px rgba(31,15,24,.05);
+      transition: transform .08s ease, box-shadow .16s ease, border-color .16s ease;
+      min-height: 52px;
+      display:flex; justify-content:space-between; align-items:center; gap:8px;
+      font-weight:1000; font-size: 14px;
     }
-    .filterBtn:active{transform: translateY(2px) scale(.99);}
-    .filterBtn .tag{
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(255,79,163,.10);
-      border: 1px solid rgba(255,79,163,.22);
-      font-size: 12px;
-      white-space:nowrap;
-    }
-    .filterBtn.active{
-      border-color: rgba(255,79,163,.42);
-      box-shadow: 0 18px 48px rgba(255,79,163,.14);
-    }
+    .filterBtn:active{transform: translateY(1px) scale(.99);}
+    .filterBtn .tag{padding: 6px 8px; border-radius: 999px; background: rgba(255,111,179,.10); border: 1px solid rgba(255,111,179,.20); font-size: 11px;}
+    .filterBtn.active{border-color: rgba(255,111,179,.40); box-shadow: 0 16px 40px rgba(255,111,179,.10);}
 
-    /* ===== MODAL ===== */
+    /* modal */
     .modal{
       position:fixed; inset:0;
-      display:none;
-      place-items:center;
-      background: rgba(15,8,16,.44);
+      display:none; place-items:center;
+      background: rgba(15,8,16,.40);
       backdrop-filter: blur(10px);
       z-index: 999;
-      padding: 18px;
+      padding: 14px;
     }
     .modal.show{display:grid;}
     .modalCard{
-      width: min(900px, 96vw);
-      background: rgba(255,255,255,.96);
-      border: 1px solid rgba(246,201,221,.95);
-      border-radius: 38px;
+      width: min(780px, 96vw);
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--stroke);
+      border-radius: 26px;
       box-shadow: var(--shadow);
-      padding: 26px;
+      padding: 18px;
       text-align:center;
     }
-    .modalCard h3{
-      margin:0;
-      font-size: clamp(28px, 3.2vw, 46px);
-      letter-spacing:-1px;
-      font-weight:1000;
-    }
-    .modalCard p{
-      margin: 12px 0 0;
-      color: rgba(122,90,104,.92);
-      font-weight:950;
-      font-size: clamp(18px, 2.2vw, 26px);
-      line-height: 1.6;
-    }
+    .modalCard h3{margin:0; font-size: 20px; letter-spacing:-.6px; font-weight:1000;}
+    .modalCard p{margin: 10px 0 0; color: rgba(123,90,105,.92); font-weight:950; font-size: 14px; line-height: 1.6;}
     .modalCard .mono{
-      margin-top: 16px;
+      margin-top: 12px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      background: rgba(255,79,163,.08);
-      border: 1px solid rgba(255,79,163,.18);
-      border-radius: 22px;
-      padding: 14px;
-      font-size: 14px;
+      background: rgba(255,111,179,.08);
+      border: 1px solid rgba(255,111,179,.18);
+      border-radius: 16px;
+      padding: 10px;
+      font-size: 12px;
       font-weight: 950;
       color: rgba(43,27,34,.92);
       text-align:left;
       overflow:auto;
-      max-height: 200px;
+      max-height: 180px;
       white-space: pre-wrap;
     }
-
     canvas{display:none;}
   </style>
 </head>
@@ -622,11 +529,23 @@
       <section class="screen active" id="screenStart">
         <div class="panel">
           <div class="startWrap" id="tapToStart" role="button" tabindex="0" aria-label="터치하여 시작">
-            <div>
+            <div class="bubbles" aria-hidden="true">
+              <div class="bubble" style="left:-40px; top:40px;"></div>
+              <div class="bubble b2" style="right:-60px; top:120px;"></div>
+              <div class="bubble b3" style="left:20%; bottom:-60px;"></div>
+            </div>
+
+            <div class="startCard">
               <h1 class="startTitle">O.cut</h1>
-              <div class="startSub">오늘 네컷 · 클릭하시면 실행됩니다.</div>
+              <div class="startSub">오늘 네컷</div>
+              <div class="startHint"><span class="pulse"></span>클릭하시면 시작됩니다.</div>
+
               <div class="startBtnRow">
                 <button class="cta primary" id="btnStart" type="button">시작</button>
+              </div>
+
+              <div style="margin-top:10px; color:rgba(123,90,105,.78); font-weight:900; font-size:12px;">
+                카메라 권한이 뜨면 허용을 눌러주세요.
               </div>
             </div>
           </div>
@@ -640,7 +559,18 @@
             <div class="infoBox">
               <h2>촬영 안내</h2>
               <p>10초마다 1장씩, 총 4장을 자동 촬영합니다.</p>
-              <div class="infoTimer" id="infoTimer">3</div>
+
+              <div class="infoTimer" id="infoTimer">9</div>
+              <div class="infoProgress"><i id="infoBar"></i></div>
+
+              <div class="infoSkipRow">
+                <button class="cta ghost" id="btnInfoSilent" type="button">안내 음성 끄기</button>
+                <button class="cta primary" id="btnInfoSkip" type="button">바로 촬영</button>
+              </div>
+
+              <div class="help" style="margin-top:10px;">
+                문제가 반복되면 관리자에게 문의하세요.
+              </div>
             </div>
           </div>
         </div>
@@ -668,18 +598,18 @@
               <div class="cardBox">
                 <div class="cardTitle">미리보기</div>
                 <div class="thumbGrid" id="thumbGrid">
-                  <div class="thumb" data-i="0">1번</div>
-                  <div class="thumb" data-i="1">2번</div>
-                  <div class="thumb" data-i="2">3번</div>
-                  <div class="thumb" data-i="3">4번</div>
+                  <div class="thumb" data-i="0">1</div>
+                  <div class="thumb" data-i="1">2</div>
+                  <div class="thumb" data-i="2">3</div>
+                  <div class="thumb" data-i="3">4</div>
                 </div>
               </div>
 
               <div class="cardBox">
                 <div class="cardTitle">촬영 제어</div>
-                <div style="display:flex; gap:14px; flex-wrap:wrap;">
-                  <button class="cta danger" id="btnCancel" type="button" style="flex:1; min-width:220px;">취소</button>
-                  <button class="cta ghost" id="btnRetake" type="button" style="flex:1; min-width:220px;" disabled>전체 다시찍기</button>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                  <button class="cta danger" id="btnCancel" type="button" style="flex:1; min-width:140px;">취소</button>
+                  <button class="cta ghost" id="btnRetake" type="button" style="flex:1; min-width:140px;" disabled>다시찍기</button>
                 </div>
                 <div class="help" style="margin-top:10px;">
                   문제가 반복되면 관리자에게 문의하세요.
@@ -695,7 +625,7 @@
         </div>
       </section>
 
-      <!-- FRAME SCREEN -->
+      <!-- FRAME -->
       <section class="screen" id="screenFrame">
         <div class="panel">
           <div class="editGrid">
@@ -711,17 +641,15 @@
 
             <div class="rightPanel">
               <h2>프레임 선택</h2>
-              <p>프레임 이미지를 눌러 바로 적용됩니다.</p>
+              <p>전체 프레임 이미지를 눌러 적용합니다.</p>
 
               <div class="field">
-                <label>프레임 목록</label>
+                <label>프레임 5개</label>
                 <div class="frameGrid" id="frameGrid"></div>
                 <div class="help" id="frameHealth">프레임 점검 중…</div>
               </div>
 
-              <div class="help">
-                프레임이 보이지 않거나 저장이 실패하면 관리자에게 문의하세요.
-              </div>
+              <div class="help">문제가 반복되면 관리자에게 문의하세요.</div>
             </div>
           </div>
 
@@ -732,7 +660,7 @@
         </div>
       </section>
 
-      <!-- FILTER SCREEN -->
+      <!-- FILTER -->
       <section class="screen" id="screenFilter">
         <div class="panel">
           <div class="editGrid">
@@ -748,12 +676,12 @@
 
             <div class="rightPanel">
               <h2>필터 선택</h2>
-              <p>필터를 누르면 미리보기에 즉시 반영됩니다.</p>
+              <p>선택 즉시 미리보기에 반영됩니다.</p>
 
               <div class="field">
                 <label>필터</label>
                 <div class="filterGrid" id="filterGrid"></div>
-                <div class="help">선택한 필터는 저장 파일에도 동일하게 적용됩니다.</div>
+                <div class="help">선택한 필터는 저장 파일에도 동일 적용됩니다.</div>
               </div>
 
               <div class="help">문제가 반복되면 관리자에게 문의하세요.</div>
@@ -767,7 +695,7 @@
         </div>
       </section>
 
-      <!-- TEXT SCREEN -->
+      <!-- TEXT -->
       <section class="screen" id="screenText">
         <div class="panel">
           <div class="editGrid">
@@ -782,23 +710,31 @@
             </div>
 
             <div class="rightPanel">
-              <h2>문구 입력</h2>
-              <p>글씨 크기를 크게 올려도 됩니다.</p>
+              <h2>문구</h2>
+              <p>문구 표시를 선택할 수 있습니다.</p>
+
+              <div class="field">
+                <label>문구 표시</label>
+                <div style="display:flex; gap:10px;">
+                  <button class="cta ghost" id="btnTextOn" type="button" style="flex:1;">ON</button>
+                  <button class="cta ghost" id="btnTextOff" type="button" style="flex:1;">OFF</button>
+                </div>
+                <div class="help">OFF면 저장 이미지에도 문구가 포함되지 않습니다.</div>
+              </div>
 
               <div class="field">
                 <label for="textInput">문구(하단)</label>
                 <input class="control" id="textInput" type="text" maxlength="50" placeholder="예) 풍산고 짱 · 2026.02.22" />
                 <div class="row2">
                   <div>
-                    <label for="textSize" style="display:block; margin:10px 0 8px; font-weight:1000;">글씨 크기</label>
-                    <input class="control" id="textSize" type="number" min="16" max="64" value="34" />
+                    <label for="textSize" style="display:block; margin:8px 0 6px;">글씨 크기</label>
+                    <input class="control" id="textSize" type="number" min="14" max="48" value="18" />
                   </div>
                   <div>
-                    <label for="textPos" style="display:block; margin:10px 0 8px; font-weight:1000;">아래 여백(%)</label>
-                    <input class="control" id="textPos" type="number" min="2" max="18" value="4.8" step="0.1" />
+                    <label for="textPos" style="display:block; margin:8px 0 6px;">아래 여백(%)</label>
+                    <input class="control" id="textPos" type="number" min="2" max="18" value="5" step="0.1" />
                   </div>
                 </div>
-                <div class="help">저장 이미지에도 문구가 포함됩니다.</div>
               </div>
 
               <div class="help">문제가 반복되면 관리자에게 문의하세요.</div>
@@ -812,7 +748,7 @@
         </div>
       </section>
 
-      <!-- SAVE SCREEN -->
+      <!-- SAVE -->
       <section class="screen" id="screenSave">
         <div class="panel">
           <div class="editGrid">
@@ -828,18 +764,14 @@
 
             <div class="rightPanel">
               <h2>저장</h2>
-              <p>최종 미리보기를 확인하고 저장하세요.</p>
+              <p>최종 미리보기 확인 후 저장하세요.</p>
 
               <div class="field">
                 <label>저장</label>
-                <button class="cta primary" id="btnSave" type="button" style="width:100%;">PNG로 저장</button>
-                <button class="cta danger" id="btnHome" type="button" style="width:100%; margin-top:12px;">처음으로</button>
-                <div class="help" style="margin-top:10px;">
-                  저장이 되지 않으면 관리자에게 문의하세요.
-                </div>
+                <button class="cta primary" id="btnSave" type="button" style="width:100%;">PNG 저장</button>
+                <button class="cta danger" id="btnHome" type="button" style="width:100%; margin-top:10px;">처음으로</button>
+                <div class="help" style="margin-top:10px;">저장이 되지 않으면 관리자에게 문의하세요.</div>
               </div>
-
-              <div class="help">자동 초기화: 60초 동안 입력이 없으면 처음 화면으로 이동합니다.</div>
             </div>
           </div>
 
@@ -860,15 +792,15 @@
       <h3 id="modalTitle">오류</h3>
       <p id="modalMsg">문제가 발생했습니다. 관리자에게 문의하세요.</p>
       <div class="mono" id="modalDetail" style="display:none;"></div>
-      <div style="margin-top:18px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-        <button class="cta primary" id="modalOk" type="button" style="width:min(460px, 92vw); font-size:24px; padding:26px 22px;">확인</button>
+      <div style="margin-top:14px; display:flex; justify-content:center;">
+        <button class="cta primary" id="modalOk" type="button" style="width:min(360px, 92vw);">확인</button>
       </div>
     </div>
   </div>
 
   <script>
     // =========================
-    // 1) 화면 전환
+    // 화면 전환
     // =========================
     const statusEl = document.getElementById('status');
     const screens = {
@@ -883,29 +815,25 @@
     function show(name){
       Object.values(screens).forEach(s => s.classList.remove('active'));
       screens[name].classList.add('active');
-
       const label = (
         name === 'start'  ? '대기' :
         name === 'info'   ? '안내' :
         name === 'shoot'  ? '촬영' :
         name === 'frame'  ? '프레임' :
         name === 'filter' ? '필터' :
-        name === 'text'   ? '문구' :
-        '저장'
+        name === 'text'   ? '문구' : '저장'
       );
       statusEl.innerHTML = `<span class="dot"></span>${label}`;
-      bumpIdleTimer();
     }
 
     // =========================
-    // 2) 모달(관리자 문의 문구)
+    // 모달
     // =========================
     const modal = document.getElementById('modal');
     const modalTitle = document.getElementById('modalTitle');
     const modalMsg = document.getElementById('modalMsg');
     const modalDetail = document.getElementById('modalDetail');
     const modalOk = document.getElementById('modalOk');
-
     function openModal(title, msg, detail){
       modalTitle.textContent = title || '오류';
       modalMsg.textContent = msg || '문제가 발생했습니다. 관리자에게 문의하세요.';
@@ -924,11 +852,15 @@
     modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
 
     // =========================
-    // 3) DOM
+    // DOM
     // =========================
     const tapToStart = document.getElementById('tapToStart');
     const btnStart = document.getElementById('btnStart');
+
     const infoTimerEl = document.getElementById('infoTimer');
+    const infoBar = document.getElementById('infoBar');
+    const btnInfoSkip = document.getElementById('btnInfoSkip');
+    const btnInfoSilent = document.getElementById('btnInfoSilent');
 
     const video = document.getElementById('video');
     const countdownEl = document.getElementById('countdown');
@@ -965,17 +897,15 @@
     const textSize = document.getElementById('textSize');
     const textPos = document.getElementById('textPos');
 
+    const btnTextOn = document.getElementById('btnTextOn');
+    const btnTextOff = document.getElementById('btnTextOff');
+
     const exportCanvas = document.getElementById('exportCanvas');
 
-    // 프리뷰 프레임들(여러 화면에 있음)
     const previewSlots = [
-      // frame screen
       [document.querySelector('#slot1 img'), document.querySelector('#slot2 img'), document.querySelector('#slot3 img'), document.querySelector('#slot4 img')],
-      // filter screen
       [document.querySelector('#slot1b img'), document.querySelector('#slot2b img'), document.querySelector('#slot3b img'), document.querySelector('#slot4b img')],
-      // text screen
       [document.querySelector('#slot1c img'), document.querySelector('#slot2c img'), document.querySelector('#slot3c img'), document.querySelector('#slot4c img')],
-      // save screen
       [document.querySelector('#slot1d img'), document.querySelector('#slot2d img'), document.querySelector('#slot3d img'), document.querySelector('#slot4d img')],
     ];
 
@@ -986,7 +916,6 @@
       document.getElementById('overlayText4'),
     ];
 
-    // DOM 슬롯(프레임 화면 1개만 수출 좌표 기준으로 씀)
     const slotElsForExport = [
       document.getElementById('slot1'),
       document.getElementById('slot2'),
@@ -996,45 +925,7 @@
     const frameElForExport = document.getElementById('framePreview');
 
     // =========================
-    // 4) 상태
-    // =========================
-    let stream = null;
-    let shots = [null,null,null,null]; // 원본 dataURL
-    let aborter = null;
-    let running = false;
-
-    const INTERVAL_SEC = 10;
-    const TOTAL_SHOTS = 4;
-
-    // 키오스크 자동 홈(저장 화면)
-    const AUTO_HOME_MS = 60_000;
-    let idleTimer = null;
-    function bumpIdleTimer(){
-      if(idleTimer) clearTimeout(idleTimer);
-      if(screens.save.classList.contains('active')){
-        idleTimer = setTimeout(()=> goHome(), AUTO_HOME_MS);
-      }
-    }
-    ['pointerdown','keydown','mousemove','touchstart'].forEach(ev=>{
-      window.addEventListener(ev, ()=> bumpIdleTimer(), {passive:true});
-    });
-
-    // =========================
-    // 5) 유틸
-    // =========================
-    const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
-    function setCountdownVisible(v){ countdownEl.classList.toggle('show', v); }
-    function setCountdownText(t){ countdownEl.textContent = String(t); }
-
-    function toast(msg, ms=900){
-      toastEl.textContent = msg;
-      toastEl.classList.add('show');
-      clearTimeout(toastEl._t);
-      toastEl._t = setTimeout(()=>toastEl.classList.remove('show'), ms);
-    }
-
-    // =========================
-    // 6) TTS
+    // TTS
     // =========================
     let ttsEnabled = true;
     function speak(text){
@@ -1048,22 +939,85 @@
     }
 
     // =========================
-    // 7) 프레임(이미지로 선택) + 슬롯 프리셋
-    //    - 프레임마다 사진 위치가 다르면 여기 값만 바꾸면 됨.
+    // 상태/설정
+    // =========================
+    let stream = null;
+    let shots = [null,null,null,null];
+    let aborter = null;
+    let running = false;
+
+    const INTERVAL_SEC = 10;
+    const TOTAL_SHOTS = 4;
+
+    const INFO_SECONDS = 12; // ✅ 안내 더 길게
+    const INFO_TTS = [
+      '촬영 안내를 시작합니다.',
+      '10초마다 한 장씩, 총 4장을 자동 촬영합니다.',
+      '카운트다운이 끝나면 촬영됩니다.',
+      '촬영 후 프레임, 필터, 문구를 선택하고 저장합니다.'
+    ];
+
+    // =========================
+    // 유틸
+    // =========================
+    const sleep = (ms) => new Promise(r=>setTimeout(r, ms));
+    function setCountdownVisible(v){ countdownEl.classList.toggle('show', v); }
+    function setCountdownText(t){ countdownEl.textContent = String(t); }
+    function toast(msg, ms=900){
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      clearTimeout(toastEl._t);
+      toastEl._t = setTimeout(()=>toastEl.classList.remove('show'), ms);
+    }
+
+    // =========================
+    // 문구 ON/OFF
+    // =========================
+    let textEnabled = true;
+    function setTextEnabled(on){
+      textEnabled = !!on;
+      overlayTexts.forEach(el=> el.classList.toggle('off', !textEnabled));
+      textInput.disabled = !textEnabled;
+      textSize.disabled = !textEnabled;
+      textPos.disabled = !textEnabled;
+      toast(textEnabled ? '문구 ON' : '문구 OFF', 700);
+    }
+    btnTextOn.addEventListener('click', ()=> setTextEnabled(true));
+    btnTextOff.addEventListener('click', ()=> setTextEnabled(false));
+
+    function applyText(){
+      const txt = (textInput.value || '오늘 네컷 · O.cut').trim();
+      const px = Math.max(14, Math.min(48, Number(textSize.value) || 18));
+      const b  = Math.max(2, Math.min(18, Number(textPos.value) || 5));
+      overlayTexts.forEach(el=>{
+        el.textContent = txt;
+        el.style.fontSize = px + 'px';
+        el.style.bottom = b + '%';
+      });
+    }
+    textInput.addEventListener('input', applyText);
+    textSize.addEventListener('input', applyText);
+    textPos.addEventListener('input', applyText);
+
+    // =========================
+    // 프레임 (✅ 5개 전체 이미지로 선택)
+    // - template1.png ~ template5.png 를 같은 폴더에 둠
     // =========================
     const FRAMES = [
-      { id:'t1', name:'프레임 A', file:'template1.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:18} },
-      { id:'t2', name:'프레임 B', file:'template2.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:18} },
-      { id:'t3', name:'프레임 C', file:'template3.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:18} },
-      { id:'t4', name:'프레임 D', file:'template4.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:18} },
-      { id:'t5', name:'프레임 E', file:'template5.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:18} },
+      { id:'t1', name:'프레임 1', file:'template1.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:16} },
+      { id:'t2', name:'프레임 2', file:'template2.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:16} },
+      { id:'t3', name:'프레임 3', file:'template3.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:16} },
+      { id:'t4', name:'프레임 4', file:'template4.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:16} },
+      { id:'t5', name:'프레임 5', file:'template5.png', slot:{tl:[4,24], tr:[52,24], bl:[4,54], br:[52,54], wh:[44,22], r:16} },
     ];
     let selectedFrame = FRAMES[0];
-    const frameOK = new Map(); // file -> boolean
+    const frameOK = new Map();
 
     function applyFrame(frame){
       selectedFrame = frame;
-      document.documentElement.style.setProperty('--frame-url', `"${frame.file}"`);
+
+      // ✅ 핵심: --frame-url 에 파일명만 넣기 (따옴표 X)
+      document.documentElement.style.setProperty('--frame-url', frame.file);
 
       const s = frame.slot;
       document.documentElement.style.setProperty('--tl-left',  s.tl[0] + '%');
@@ -1076,12 +1030,14 @@
       document.documentElement.style.setProperty('--br-top',   s.br[1] + '%');
       document.documentElement.style.setProperty('--slot-w',   s.wh[0] + '%');
       document.documentElement.style.setProperty('--slot-h',   s.wh[1] + '%');
-      document.documentElement.style.setProperty('--slot-r',   (s.r || 18) + 'px');
+      document.documentElement.style.setProperty('--slot-r',   (s.r || 16) + 'px');
 
-      // UI active
       [...frameGrid.querySelectorAll('.frameBtn')].forEach(b=>{
         b.classList.toggle('active', b.dataset.id === frame.id);
       });
+
+      toast('프레임 적용', 700);
+      speak('프레임이 적용되었습니다.');
     }
 
     function loadImage(src){
@@ -1096,23 +1052,14 @@
     async function checkFramesAndRender(){
       frameHealth.textContent = '프레임 점검 중…';
       frameGrid.innerHTML = '';
-
       let okCount = 0;
       const missing = [];
 
-      // 먼저 존재 체크
       for(const f of FRAMES){
-        try{
-          await loadImage(f.file);
-          frameOK.set(f.file, true);
-          okCount++;
-        }catch(e){
-          frameOK.set(f.file, false);
-          missing.push(f.file);
-        }
+        try{ await loadImage(f.file); frameOK.set(f.file, true); okCount++; }
+        catch(e){ frameOK.set(f.file, false); missing.push(f.file); }
       }
 
-      // 그 다음 UI 생성(썸네일 이미지)
       FRAMES.forEach((f, idx)=>{
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -1122,7 +1069,6 @@
         const ok = frameOK.get(f.file) !== false;
         if(!ok) btn.classList.add('disabled');
 
-        // 썸네일(없으면 그래도 공간 유지)
         const img = document.createElement('img');
         img.alt = f.name;
         img.src = ok ? f.file : '';
@@ -1130,7 +1076,7 @@
 
         const meta = document.createElement('div');
         meta.className = 'meta';
-        meta.innerHTML = `<span>${f.name}</span><span class="badge">${ok ? '선택' : '관리자 문의'}</span>`;
+        meta.innerHTML = `<span>${f.name}</span><span class="badge">${ok ? '선택' : '없음'}</span>`;
         btn.appendChild(meta);
 
         btn.addEventListener('click', ()=>{
@@ -1139,51 +1085,39 @@
             return;
           }
           applyFrame(f);
-          toast('프레임 적용', 700);
         });
 
         frameGrid.appendChild(btn);
-
-        if(idx === 0 && ok) {
-          // 첫 프레임 자동 선택
-          // (이미 selectedFrame이 t1이라도 적용해서 UI 동기화)
-          applyFrame(f);
-        }
+        if(idx === 0 && ok) applyFrame(f);
       });
 
       if(okCount === 0){
         frameHealth.textContent = '프레임 파일을 찾을 수 없습니다.';
-        openModal(
-          '프레임 오류',
-          '프레임 파일을 찾을 수 없습니다. 관리자에게 문의하세요.',
+        openModal('프레임 오류', '프레임 파일을 찾을 수 없습니다. 관리자에게 문의하세요.',
           '누락 파일:\n- ' + missing.join('\n- ')
         );
       }else{
         frameHealth.textContent = missing.length
-          ? `사용 가능: ${okCount}개 / 누락: ${missing.length}개 (누락 시 관리자에게 문의)`
+          ? `사용 가능: ${okCount}개 / 누락: ${missing.length}개 (누락 시 관리자 문의)`
           : `프레임 준비 완료 (${okCount}개)`;
       }
     }
 
     // =========================
-    // 8) 필터
+    // 필터
     // =========================
     const FILTERS = [
       { id:'none',  name:'기본',   css:'none',                                           tag:'원본' },
       { id:'bw',    name:'흑백',   css:'grayscale(1) contrast(1.08)',                    tag:'B/W' },
-      { id:'sepia', name:'세피아', css:'sepia(0.9) contrast(1.05) saturate(1.15)',      tag:'Vintage' },
+      { id:'sepia', name:'세피아', css:'sepia(0.9) contrast(1.05) saturate(1.15)',       tag:'Vintage' },
       { id:'soft',  name:'소프트', css:'brightness(1.06) contrast(0.98) saturate(0.96)', tag:'Soft' },
-      { id:'vivid', name:'비비드', css:'contrast(1.14) saturate(1.45)',                 tag:'Vivid' },
-      { id:'cool',  name:'쿨톤',   css:'saturate(1.08) contrast(1.06) hue-rotate(330deg)', tag:'Cool' },
-      { id:'warm',  name:'웜톤',   css:'saturate(1.10) contrast(1.05) hue-rotate(12deg)',  tag:'Warm' },
+      { id:'vivid', name:'비비드', css:'contrast(1.14) saturate(1.45)',                  tag:'Vivid' },
     ];
     let selectedFilter = FILTERS[0];
 
     function applyPreviewFilter(){
       document.documentElement.style.setProperty('--preview-filter', selectedFilter.css);
-      // (이미지 태그들은 CSS var로 자동 반영됨)
     }
-
     function renderFilterButtons(){
       filterGrid.innerHTML = '';
       FILTERS.forEach(f=>{
@@ -1197,54 +1131,30 @@
           [...filterGrid.querySelectorAll('.filterBtn')].forEach(b=>b.classList.remove('active'));
           btn.classList.add('active');
           toast('필터 적용', 700);
+          speak('필터가 적용되었습니다.');
         });
         filterGrid.appendChild(btn);
       });
     }
 
     // =========================
-    // 9) 문구
-    // =========================
-    function applyText(){
-      const txt = (textInput.value || '오늘 네컷 · O.cut').trim();
-      const px = Math.max(16, Math.min(64, Number(textSize.value) || 34));
-      const b  = Math.max(2, Math.min(18, Number(textPos.value) || 4.8));
-
-      overlayTexts.forEach(el=>{
-        el.textContent = txt;
-        el.style.fontSize = px + 'px';
-        el.style.bottom = b + '%';
-      });
-    }
-    textInput.addEventListener('input', applyText);
-    textSize.addEventListener('input', applyText);
-    textPos.addEventListener('input', applyText);
-
-    // =========================
-    // 10) 촬영 미리보기/슬롯 이미지 넣기
+    // 미리보기 채우기
     // =========================
     function setThumb(i){
       const el = thumbs[i];
       el.innerHTML = '';
-      if(!shots[i]){ el.textContent = `${i+1}번`; return; }
+      if(!shots[i]){ el.textContent = `${i+1}`; return; }
       const im = new Image();
       im.src = shots[i];
       el.appendChild(im);
     }
-
     function resetShots(){
       shots = Array(TOTAL_SHOTS).fill(null);
-      for(let i=0;i<TOTAL_SHOTS;i++){
-        setThumb(i);
-      }
-      // 프리뷰 슬롯 전체 초기화
-      previewSlots.forEach(group=>{
-        group.forEach(img=> img.removeAttribute('src'));
-      });
+      for(let i=0;i<TOTAL_SHOTS;i++) setThumb(i);
+      previewSlots.forEach(group=> group.forEach(img=> img.removeAttribute('src')));
       btnRetake.disabled = true;
       btnShootNext.disabled = true;
     }
-
     function updateAllPreviews(){
       previewSlots.forEach(group=>{
         for(let i=0;i<TOTAL_SHOTS;i++){
@@ -1254,7 +1164,7 @@
     }
 
     // =========================
-    // 11) 카메라
+    // 카메라
     // =========================
     async function openCamera(){
       const constraints = {
@@ -1266,7 +1176,6 @@
       await video.play();
       await waitForVideoReady();
     }
-
     function closeCamera(){
       if(stream){
         stream.getTracks().forEach(t=>t.stop());
@@ -1274,7 +1183,6 @@
       }
       video.srcObject = null;
     }
-
     async function waitForVideoReady(){
       const start = performance.now();
       while((video.videoWidth === 0 || video.videoHeight === 0) && performance.now()-start < 2500){
@@ -1284,7 +1192,7 @@
     }
 
     // =========================
-    // 12) 찰칵 효과
+    // 셔터 FX
     // =========================
     let audioCtx = null;
     function clickBeep(){
@@ -1297,7 +1205,7 @@
         g.gain.value = 0.0001;
         o.connect(g); g.connect(audioCtx.destination);
         o.start();
-        g.gain.exponentialRampToValueAtTime(0.14, audioCtx.currentTime + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.12, audioCtx.currentTime + 0.01);
         g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
         o.stop(audioCtx.currentTime + 0.13);
       }catch(e){}
@@ -1307,19 +1215,18 @@
       void flashEl.offsetWidth;
       flashEl.classList.add('on');
       videoWrap.animate(
-        [{ transform:'scale(1)' }, { transform:'scale(1.018)' }, { transform:'scale(1)' }],
-        { duration: 240, easing:'ease-out' }
+        [{ transform:'scale(1)' }, { transform:'scale(1.012)' }, { transform:'scale(1)' }],
+        { duration: 220, easing:'ease-out' }
       );
       clickBeep();
     }
 
     // =========================
-    // 13) 캡처(원본) - 4:3 중앙 크롭 + 미러
+    // 캡처(원본)
     // =========================
     function captureFrameRaw(){
       const vw = video.videoWidth;
       const vh = video.videoHeight;
-
       const targetW = 1400;
       const targetH = 1050;
 
@@ -1349,7 +1256,7 @@
     }
 
     // =========================
-    // 14) 촬영 루프
+    // 촬영 루프
     // =========================
     async function runShoot(){
       if(running) return;
@@ -1361,35 +1268,39 @@
       const signal = aborter.signal;
 
       try{
+        speak('촬영을 시작합니다.');
         for(let i=0;i<TOTAL_SHOTS;i++){
           if(signal.aborted) throw new Error('aborted');
 
           pillStep.textContent = `촬영 ${i+1} / ${TOTAL_SHOTS}`;
-          toast(`${i+1}번째 촬영 준비`, 900);
+          toast(`${i+1}번째 준비`, 700);
 
           for(let t=INTERVAL_SEC; t>=1; t--){
             if(signal.aborted) throw new Error('aborted');
             pillMsg.textContent = `${t}초 뒤 촬영`;
             setCountdownText(t);
             setCountdownVisible(true);
+            if(t <= 3) speak(String(t));
             await sleep(1000);
           }
 
           setCountdownVisible(false);
           pillMsg.textContent = '찰칵!';
           toast('찰칵!', 650);
+          speak('찰칵');
 
           shutterFX();
           await sleep(80);
 
           shots[i] = captureFrameRaw();
           setThumb(i);
-
-          await sleep(320);
+          await sleep(260);
         }
 
         pillMsg.textContent = '촬영 완료';
         toast('촬영 완료', 900);
+        speak('촬영이 완료되었습니다.');
+
         btnRetake.disabled = false;
         btnShootNext.disabled = false;
 
@@ -1407,19 +1318,41 @@
       if(aborter) aborter.abort();
       aborter = null;
       running = false;
+      window.speechSynthesis && window.speechSynthesis.cancel();
     }
 
     // =========================
-    // 15) 안내 화면 → 촬영
+    // 안내 화면
     // =========================
+    let infoSkip = false;
+    btnInfoSkip.addEventListener('click', ()=>{ infoSkip = true; });
+    btnInfoSilent.addEventListener('click', ()=>{
+      ttsEnabled = !ttsEnabled;
+      btnInfoSilent.textContent = ttsEnabled ? '안내 음성 끄기' : '안내 음성 켜기';
+      toast(ttsEnabled ? '음성 ON' : '음성 OFF', 800);
+      speak(ttsEnabled ? '안내 음성이 켜졌습니다.' : '안내 음성이 꺼졌습니다.');
+    });
+
     async function showInfoThenShoot(){
+      infoSkip = false;
       show('info');
-      for(let t=3; t>=1; t--){
-        infoTimerEl.textContent = String(t);
-        await sleep(650);
+
+      for(const line of INFO_TTS){
+        if(infoSkip) break;
+        speak(line);
+        await sleep(750);
       }
+
+      for(let t=INFO_SECONDS; t>=1; t--){
+        if(infoSkip) break;
+        infoTimerEl.textContent = String(t);
+        infoBar.style.width = `${Math.round(((INFO_SECONDS - t + 1) / INFO_SECONDS) * 100)}%`;
+        await sleep(850);
+      }
+
       infoTimerEl.textContent = 'START';
-      await sleep(420);
+      infoBar.style.width = '100%';
+      await sleep(250);
 
       show('shoot');
       try{
@@ -1433,7 +1366,7 @@
     }
 
     // =========================
-    // 16) PNG 저장 (프레임 + 필터 + 문구)
+    // 저장
     // =========================
     function drawCover(ctx, img, dx, dy, dw, dh){
       const iw = img.width, ih = img.height;
@@ -1477,13 +1410,10 @@
     }
 
     async function exportPNG(){
-      bumpIdleTimer();
-
       if(!shots.every(Boolean)){
         openModal('저장 불가', '4장 모두 촬영되어야 저장할 수 있습니다. 관리자에게 문의하세요.', '');
         return;
       }
-
       const ok = frameOK.get(selectedFrame.file) !== false;
       if(!ok){
         openModal('프레임 오류', '프레임 파일을 찾을 수 없습니다. 관리자에게 문의하세요.', selectedFrame.file);
@@ -1502,11 +1432,9 @@
       exportCanvas.height = tpl.height;
       const ctx = exportCanvas.getContext('2d');
 
-      // 프레임
       ctx.filter = 'none';
       ctx.drawImage(tpl, 0, 0);
 
-      // 사진(필터)
       const imgs = await Promise.all(shots.map(s => loadImage(s)));
       const rects = getSlotRectsFromDOM(tpl.width, tpl.height);
 
@@ -1517,43 +1445,44 @@
       }
       ctx.filter = 'none';
 
-      // 문구
-      const txt = (textInput.value || '오늘 네컷 · O.cut').trim();
-      const fontPx = Math.max(16, Math.min(80, Number(textSize.value) || 34));
-      const bottomPct = Math.max(2, Math.min(30, Number(textPos.value) || 4.8));
-      const scaledFont = Math.round(fontPx * (tpl.width / 1356));
+      if(textEnabled){
+        const txt = (textInput.value || '오늘 네컷 · O.cut').trim();
+        const fontPx = Math.max(14, Math.min(48, Number(textSize.value) || 18));
+        const bottomPct = Math.max(2, Math.min(18, Number(textPos.value) || 5));
+        const scaledFont = Math.round(fontPx * (tpl.width / 1356));
 
-      ctx.save();
-      ctx.font = `1000 ${scaledFont}px system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+        ctx.save();
+        ctx.font = `1000 ${scaledFont}px system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
 
-      const padX = Math.round(scaledFont * 1.0);
-      const padY = Math.round(scaledFont * 0.62);
-      const x = Math.round(tpl.width * 0.5);
-      const y = Math.round(tpl.height * (1 - bottomPct/100));
+        const padX = Math.round(scaledFont * 0.9);
+        const padY = Math.round(scaledFont * 0.55);
+        const x = Math.round(tpl.width * 0.5);
+        const y = Math.round(tpl.height * (1 - bottomPct/100));
 
-      const w = Math.ceil(ctx.measureText(txt).width);
-      const boxW = Math.min(tpl.width - 90, w + padX*2);
-      const boxH = Math.round(scaledFont + padY*1.25);
-      const boxX = Math.round(x - boxW/2);
-      const boxY = Math.round(y - boxH/2);
-      const rr = Math.round(scaledFont * 0.66);
+        const w = Math.ceil(ctx.measureText(txt).width);
+        const boxW = Math.min(tpl.width - 80, w + padX*2);
+        const boxH = Math.round(scaledFont + padY*1.2);
+        const boxX = Math.round(x - boxW/2);
+        const boxY = Math.round(y - boxH/2);
+        const rr = Math.round(scaledFont * 0.60);
 
-      ctx.fillStyle = 'rgba(255,255,255,0.72)';
-      roundRect(ctx, boxX, boxY, boxW, boxH, rr);
-      ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.72)';
+        roundRect(ctx, boxX, boxY, boxW, boxH, rr);
+        ctx.fill();
 
-      ctx.strokeStyle = 'rgba(246,201,221,0.98)';
-      ctx.lineWidth = Math.max(2, Math.round(scaledFont * 0.09));
-      roundRect(ctx, boxX, boxY, boxW, boxH, rr);
-      ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,160,200,0.55)';
+        ctx.lineWidth = Math.max(2, Math.round(scaledFont * 0.08));
+        roundRect(ctx, boxX, boxY, boxW, boxH, rr);
+        ctx.stroke();
 
-      ctx.fillStyle = '#111';
-      ctx.shadowColor = 'rgba(255,255,255,0.60)';
-      ctx.shadowBlur = Math.round(scaledFont * 0.95);
-      ctx.fillText(txt, x, y);
-      ctx.restore();
+        ctx.fillStyle = '#111';
+        ctx.shadowColor = 'rgba(255,255,255,0.55)';
+        ctx.shadowBlur = Math.round(scaledFont * 0.9);
+        ctx.fillText(txt, x, y);
+        ctx.restore();
+      }
 
       const blob = await new Promise(res => exportCanvas.toBlob(res, 'image/png'));
       if(!blob){
@@ -1571,18 +1500,19 @@
       URL.revokeObjectURL(url);
 
       toast('저장 완료', 900);
+      speak('저장되었습니다.');
     }
 
     // =========================
-    // 17) 네비게이션/홈
+    // 네비/홈
     // =========================
     async function startFlow(){
       resetShots();
       applyPreviewFilter();
       applyText();
+      setTextEnabled(true);
       await showInfoThenShoot();
     }
-
     function goHome(){
       cancelShoot();
       closeCamera();
@@ -1597,8 +1527,8 @@
       if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); startFlow(); }
     });
 
-    // shoot nav
-    btnShootBack.addEventListener('click', ()=>{ goHome(); });
+    // shoot
+    btnShootBack.addEventListener('click', ()=> goHome());
     btnShootNext.addEventListener('click', ()=>{
       if(!shots.every(Boolean)){
         openModal('이동 불가', '촬영이 완료되지 않았습니다. 관리자에게 문의하세요.', '');
@@ -1607,48 +1537,36 @@
       updateAllPreviews();
       show('frame');
     });
+    btnCancel.addEventListener('click', ()=>{ cancelShoot(); closeCamera(); show('start'); });
+    btnRetake.addEventListener('click', ()=>{ cancelShoot(); resetShots(); runShoot(); });
 
-    // cancel/retake
-    btnCancel.addEventListener('click', ()=>{
-      cancelShoot();
-      closeCamera();
-      show('start');
-    });
-    btnRetake.addEventListener('click', ()=>{
-      cancelShoot();
-      resetShots();
-      runShoot();
-    });
-
-    // frame nav
+    // frame/filter/text/save
     btnFrameBack.addEventListener('click', ()=> show('shoot'));
     btnFrameNext.addEventListener('click', ()=> show('filter'));
 
-    // filter nav
     btnFilterBack.addEventListener('click', ()=> show('frame'));
     btnFilterNext.addEventListener('click', ()=> show('text'));
 
-    // text nav
     btnTextBack.addEventListener('click', ()=> show('filter'));
     btnTextNext.addEventListener('click', ()=> show('save'));
 
-    // save nav/buttons
     btnSaveBack.addEventListener('click', ()=> show('text'));
     btnSaveNext.addEventListener('click', ()=> goHome());
+
     btnSave.addEventListener('click', exportPNG);
     btnHome.addEventListener('click', ()=> goHome());
 
     // =========================
-    // 18) 초기화
+    // 초기화
     // =========================
     (async function init(){
       resetShots();
       renderFilterButtons();
       applyPreviewFilter();
       applyText();
+      setTextEnabled(true);
       show('start');
 
-      // 프레임 점검 + 프레임 버튼 렌더
       try{
         await checkFramesAndRender();
       }catch(e){
